@@ -454,29 +454,32 @@ agi <- function(respuestas, clave, alternativas, nGrupos=4, digitos=2) {
   names(datos) <- colnames(respuestas)
   names(plots) <- colnames(respuestas)
 
-  tmp <- matrix(nrow = nGrupos, ncol = nOpciones)
-  colnames(tmp) <- alternativas
-  rownames(tmp) <- c(1:nGrupos)
+  props <- matrix(nrow = nGrupos, ncol = nOpciones)
+  rownames(props) <- c(1:nGrupos)
 
   for (i in 1:nItems){
 
     for(g in 1:nGrupos){
       for(o in 1:nOpciones){
-        tmp[g,o] <- length(which(respuestas[sgIndexes[[g]],i] == alternativas[o])) / length(sgIndexes[[g]])
+        props[g,o] <- length(which(respuestas[sgIndexes[[g]],i] == alternativas[o])) / length(sgIndexes[[g]])
       }
     }
 
-    tmp <- as.data.frame(tmp)
-    names(tmp) <- ifelse(alternativas == clave[,i],
-                         paste(c("*"), names(tmp), sep = ""),
-                         names(tmp))
-    datos[[i]] <- cbind(grupo=levels(scoreGroups), round(tmp, digitos))
+    props <- as.data.frame(props)
 
-    names(tmp) <- ifelse(alternativas == clave[,i],
-                         paste(names(tmp), c("* ("), pBiserial[i,], c(")"), sep = ""),
-                         paste(names(tmp), c("  ("), pBiserial[i,], c(")"), sep = ""))
+    colnames(props) <- alternativas
+    colnames(props) <- ifelse(alternativas == clave[,i],
+                         paste(c("*"), names(props), sep = ""),
+                         names(props))
 
-    df <- reshape::melt(data = cbind(tmp,sgMeans), id.vars = "sgMeans")
+    datos[[i]] <- cbind(grupo=levels(scoreGroups), round(props, digitos))
+
+    colnames(props) <- alternativas
+    colnames(props) <- ifelse(alternativas == clave[,i],
+                         paste(names(props), c("* ("), format(pBiserial[i,], nsmall=2), c(")"), sep = ""),
+                         paste(names(props), c("  ("), format(pBiserial[i,], nsmall=2), c(")"), sep = ""))
+
+    df <- reshape::melt(data = cbind(props,sgMeans), id.vars = "sgMeans")
 
     plots[[i]] <- ggplot2::ggplot(df, ggplot2::aes_string(x="sgMeans", y="value", color="variable")) +
       ggplot2::geom_line() +
@@ -489,6 +492,7 @@ agi <- function(respuestas, clave, alternativas, nGrupos=4, digitos=2) {
             legend.text = ggplot2::element_text(size=11, face="bold", hjust=0.5)) +
       ggplot2::scale_x_continuous(limits = c(min(limites),max(limites)), breaks=round(limites,1)) +
       ggplot2::scale_y_continuous(limits = c(0,1))
+
 
   }
 
