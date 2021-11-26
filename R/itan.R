@@ -395,7 +395,14 @@ pBis <- function(respuestas, clave, alternativas, correccionPje=TRUE, digitos=2)
 #' información esencial y fácilmente interpretable acerca de características técnicas
 #' del ítem tales como su dificultad y poder de discriminación.
 #'
-#' \if{html}{\figure{i01.jpeg}{options: width=500 alt="Figura: Análisis gráfico ítem 01."}}
+#' Los estudiantes se clasifican habitualmente en 4 categorías según su puntaje
+#' alcanzado en la prueba. La proporción de estudiantes de cada grupo que seleccionó
+#' una alternativa determinada se muestra en el eje Y. Por ejemplo, en la siguiente
+#' figura se puede observar que todos los estudiantes del grupo 4 (mejor desempeño)
+#' seleccionaron la alternativa correcta D, mientras que el 25% de los estudiantes
+#' del grupo 1 (peor desempeño) seleccionaron esta opción.
+#' \if{html}{\figure{i50.jpeg}{options: width=500 alt="Figura: Análisis gráfico ítem 01."}}
+#' \if{latex}{\figure{i50.jpeg}{options: width=7cm}}
 #'
 #' @param respuestas Un data frame con las alternativas seleccionadas por los estudiantes
 #' en cada ítem de la prueba.
@@ -411,18 +418,24 @@ pBis <- function(respuestas, clave, alternativas, correccionPje=TRUE, digitos=2)
 #'
 #' @references Guadalupe de los Santos (2010). Manual para el análisis gráfico de ítems.
 #' Universidad Autónoma de Baja California. Recuperado de
-#' \url{http://www.educacionbc.edu.mx/departamentos/evaluacion/eacademicos/archivos/jornadasBC/MANUAL_PAGI.pdf}
+#' \href{http://www.educacionbc.edu.mx/departamentos/evaluacion/eacademicos/archivos/jornadasBC/MANUAL_PAGI.pdf}{manual_pagi.pdf}
 #'
 #' @examples
 #' respuestas <- datos[,-1]
 #' alternativas <- LETTERS[1:5]
-#' plots <- agi(respuestas, clave, alternativas)
-#' plots$datos$i01
-#' plots$plots$i01
 #'
-#' @export
+#' plots <- agi(respuestas, clave, alternativas)
+#'
+#' plots$datos$i01
+#' plots$datos$i25
+#' plots$datos$i50
+#'
+#' plots$plots$i01
+#' plots$plots$i25
+#' plots$plots$i50
 #'
 #' @import reshape ggplot2
+#' @export
 #'
 agi <- function(respuestas, clave, alternativas, nGrupos=4, digitos=2) {
 
@@ -466,18 +479,17 @@ agi <- function(respuestas, clave, alternativas, nGrupos=4, digitos=2) {
     }
 
     props <- as.data.frame(props)
-
     colnames(props) <- alternativas
     colnames(props) <- ifelse(alternativas == clave[,i],
-                         paste(c("*"), names(props), sep = ""),
-                         names(props))
+                         paste(c("*"), colnames(props), sep = ""),
+                         colnames(props))
 
     datos[[i]] <- cbind(grupo=levels(scoreGroups), round(props, digitos))
 
     colnames(props) <- alternativas
     colnames(props) <- ifelse(alternativas == clave[,i],
-                         paste(names(props), c("* ("), format(pBiserial[i,], nsmall=2), c(")"), sep = ""),
-                         paste(names(props), c("  ("), format(pBiserial[i,], nsmall=2), c(")"), sep = ""))
+                         paste(colnames(props), c("* ("), format(pBiserial[i,], nsmall=2), c(")"), sep = ""),
+                         paste(colnames(props), c("  ("), format(pBiserial[i,], nsmall=2), c(")"), sep = ""))
 
     df <- reshape::melt(data = cbind(props,sgMeans), id.vars = "sgMeans")
 
@@ -492,7 +504,6 @@ agi <- function(respuestas, clave, alternativas, nGrupos=4, digitos=2) {
             legend.text = ggplot2::element_text(size=11, face="bold", hjust=0.5)) +
       ggplot2::scale_x_continuous(limits = c(min(limites),max(limites)), breaks=round(limites,1)) +
       ggplot2::scale_y_continuous(limits = c(0,1))
-
 
   }
 
