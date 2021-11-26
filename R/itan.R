@@ -1,16 +1,24 @@
-#' Correcci\enc{ó}{o}n de respuestas
+#
+#                   ANÁLISIS DE ÍTEMS PARA PRUEBAS OBJETIVAS
+#
+# El paquete itan incluye funciones que permiten calcular el puntaje y calificación
+# obtenido por estudiantes en una prueba objetiva. Además incorpora funciones para
+# analizar los ítems del test y sus distractores.
+
+
+#' Corrección de respuestas
 #'
-#' La funci\enc{ó}{o}n corregir respuestas transforma las respuestas de los estudiantes
+#' La función corregir respuestas transforma las respuestas de los estudiantes
 #' a puntaje. El puntaje puede ser un \code{1}, si la respuesta es correcta, o un
 #' \code{0}, si la respuesta es incorrecta. Los valores \code{NA} reciben puntaje
 #' \code{0}.
 #'
 #' @param respuestas Un data frame con las alternativas seleccionadas por los
-#' estudiantes en cada \enc{í}{i}tem.
-#' @param clave Una data frame con la alternativa correcta para cada \enc{í}{i}tem.
+#' estudiantes en cada ítem.
+#' @param clave Una data frame con la alternativa correcta para cada ítem.
 #'
 #' @return Un data frame con los aciertos (1) o errores (0) de
-#' cada estudiante en cada \enc{í}{i}tem.
+#' cada estudiante en cada ítem.
 #'
 #' @seealso \code{\link{datos}} y \code{\link{clave}}
 #'
@@ -41,3 +49,473 @@ corregirRespuestas <- function(respuestas, clave){
   return(as.data.frame(output))
 
 }
+
+#' Cálculo de puntajes
+#'
+#' Calcula el puntaje total obtenido en la prueba por cada estudiante.
+#'
+#' @param respuestas Un data frame con el puntaje obtenido por los estudiantes
+#' en cada ítem.
+#'
+#' @return Un vector con el puntaje total obtenido en la pruebas por cada estudiante.
+#'
+#' @seealso \code{\link{corregirRespuestas}}, \code{\link{datos}} y \code{\link{clave}}.
+#'
+#' @examples
+#' respuestas <- datos[,-1]
+#' respuestasCorregidas <- corregirRespuestas(respuestas, clave)
+#' puntajes <- calcularPuntajes(respuestasCorregidas)
+#' cbind(id=datos[1], puntaje=puntajes)
+#'
+#' @export
+#'
+calcularPuntajes <- function(respuestas){
+  return(apply(X = respuestas, MARGIN = 1, FUN = sum))
+}
+
+
+#' Cálculo de notas
+#'
+#' Calcula la nota obtenida por cada estudiante en función de
+#' su puntaje alcanzado en la prueba. Se utiliza el \href{https://es.wikipedia.org/wiki/Calificaciones_escolares_en_Chile}{sistema de calificación
+#' utilizado en Chile}.
+#'
+#' @param puntajes Un data frame con los puntajes obtenidos por los estudiantes
+#' en la prueba.
+#' @param pjeMax El puntaje máximo posible de alcanzar en la prueba.
+#' @param notaMin La nota mínima otorgada al estudiante sin puntaje.
+#' @param notaMax La nota máxima otorgada al estudiante con mejor puntaje.
+#' @param notaAprobacion La nota necesaria para aprobar la prueba.
+#' @param prema Porcentaje de rendimiento mínimo aceptable. Corresponde
+#' a la proporción del puntaje máximo necesario para obtener
+#' la nota de aprobación en la prueba.
+#'
+#' @return Un data frame con las notas obtenidas por los estudiantes en la prueba.
+#'
+#' @references \href{https://escaladenotas.cl/?nmin=1.0&nmax=7.0&napr=4.0&exig=60.0&pmax=100.0&explicacion=1}{Explicación de fórmula general y cálculo específico}
+#'
+#' @seealso \code{\link{corregirRespuestas}}, \code{\link{calcularPuntajes}},
+#' \code{\link{datos}} y \code{\link{clave}}.
+#'
+#' @examples
+#' respuestas <- datos[,-1]
+#' respuestasCorregidas <- corregirRespuestas(respuestas, clave)
+#' puntaje <- calcularPuntajes(respuestasCorregidas)
+#' nota <- calcularNotas(puntaje)
+#' cbind(id=datos[1], puntaje, nota)
+#'
+#' @export
+#'
+calcularNotas <- function(puntajes, pjeMax=max(puntajes), notaMin=1.0, notaMax=7.0, notaAprobacion=4.0, prema=0.6){
+  output <- c()
+  reprobados <- puntajes[puntajes<prema*pjeMax] * (notaAprobacion-notaMin)/(prema*pjeMax) + notaMin
+  aprobados <-  (puntajes[puntajes>=prema*pjeMax]-prema*pjeMax) * (notaMax-notaAprobacion)/(pjeMax-prema*pjeMax) + notaAprobacion
+  output[puntajes<prema*pjeMax] <- reprobados
+  output[puntajes>=prema*pjeMax] <- aprobados
+  return(nota=round(output,1))
+}
+
+
+#' Índice de dificultad
+#'
+#' Calcula el índice de dificultad para cada ítem.
+#'
+#' @param respuestasCorregidas Un data frame con los puntajes obtenidos por los estudiantes
+#' en cada pregunta.
+#' @param proporcion Proporción de estudiantes que forman parte de los grupos superior
+#' e inferior. Valores habituales son 0.25, 0.27 y 0.33. Una proporción de 0.5 significa
+#' que se toman todos los datos para calcular este índice.
+#' @param digitos La cantidad de dígitos significativos que tendrá el resultado.
+#'
+#' @return Una vector con los índices de dificultad para cada ítem.
+#'
+#' @details El índice de dificultad p corresponde a la proporción de estudiantes
+#' de los grupos superior e inferior que responden correctamente el ítem.
+#' Puede tomar valores entre 0 y 1. A mayor valor, el ítem es más fácil y viceversa.
+#'
+#' @references Morales, P. (2009). Análisis de ítem en las pruebas objetivas.
+#' Madrid. Recuperado de \url{https://educrea.cl/wp-content/uploads/2014/11/19-nov-analisis-de-items-en-las-pruebas-objetivas.pdf}
+#'
+#' @seealso \code{\link{corregirRespuestas}}, \code{\link{datos}} y \code{\link{clave}}.
+#'
+#' @examples
+#' respuestas <- datos[,-1]
+#' respuestasCorregidas <- corregirRespuestas(respuestas, clave)
+#' p <- calcularIndiceDificultad(respuestasCorregidas)
+#' item <- colnames(respuestas)
+#' cbind(item, p)
+#
+#' @export
+#'
+calcularIndiceDificultad <- function(respuestasCorregidas, proporcion=0.5, digitos=2) {
+  if (proporcion >= 0.5) {
+    datos <- respuestasCorregidas
+  } else {
+    puntajes <- calcularPuntajes(respuestasCorregidas)
+    datos <- cbind(respuestasCorregidas, puntajes)
+    datos <- datos[order(datos[,ncol(datos)]), -ncol(datos)]
+    datos <- rbind(obtenerGrupoInferior(datos, proporcion), obtenerGrupoSuperior(datos, proporcion))
+  }
+  return(round(apply(datos, 2, mean), 2))
+}
+
+
+#' Índice de discriminación
+#'
+#' Calcula el índice de discriminación para cada ítem.
+#'
+#' @param respuestasCorregidas Un data frame con los puntajes obtenidos por los
+#' estudiantes en cada pregunta.
+#' @param tipo Una cadena de texto que indica el tipo de índice de discriminación
+#' a calcular. Valores posibles son: "dc1" o "dc2"
+#' @param proporcion Proporción de estudiantes que forman parte de los grupos superior
+#' e inferior. Valores habituales son 0.25, 0.27 y 0.33.
+#' @param digitos La cantidad de dígitos significativos que tendrá el resultado.
+#'
+#' @return Un vector con el índice de discriminación para cada ítem.
+#'
+#' @details Los índices de discriminación permiten determinar
+#' si un ítem diferencia entre estudiantes con alta o baja habilidad.
+#' Se calculan a partir del grupo de estudiantes con mejor y peor puntuación
+#' en el test.
+#'
+#' El índice de discriminación 1 (dc1) corresponde a la diferencia entre
+#' la proporción de aciertos del grupo superior y la proporción
+#' de aciertos del grupo inferior. Los valores extremos que puede alcanzar este
+#' índice son 0 y +/-1. Los ítems con discriminación negativa favorecen a los
+#' estudiantes con baja puntuación en el test y en principio deben ser revisados.
+#' Este índice se ve influenciado por el índice de dificultad, por lo que a veces
+#' es conveniente compararlo con el índice de discriminación 2 (dc2).
+#'
+#' El índice de discriminación 2 (dc2) corresponde a la proporción de aciertos del
+#' grupo superior en relación al total de aciertos de ambos grupos. Los valores de
+#' este índice van de 0 a 1. Pueden considerarse satisfactorios valores mayores a 0.5.
+#' Este índice es independiente del nivel de dificultad de la pregunta.
+#'
+#' @references Morales, P. (2009). Análisis de ítem en las pruebas objetivas.
+#' Madrid. Recuperado de \url{https://educrea.cl/wp-content/uploads/2014/11/19-nov-analisis-de-items-en-las-pruebas-objetivas.pdf}
+#'
+#' @seealso \code{\link{corregirRespuestas}}, \code{\link{calcularIndiceDificultad}}, \code{\link{datos}} y \code{\link{clave}}.
+#'
+#' @examples
+#' respuestas <- datos[,-1]
+#' respuestasCorregidas <- corregirRespuestas(respuestas, clave)
+#' dc1 <- calcularIndiceDiscriminacion(respuestasCorregidas, tipo="dc1", proporcion=0.25)
+#' dc2 <- calcularIndiceDiscriminacion(respuestasCorregidas, tipo="dc2", proporcion=0.25)
+#' p <- calcularIndiceDificultad(respuestasCorregidas, proporcion=0.25)
+#' cbind(p, dc1, dc2)
+#'
+#' @export
+#'
+calcularIndiceDiscriminacion <- function(respuestasCorregidas, tipo="dc1", proporcion=0.27, digitos=2) {
+
+  puntajes <- calcularPuntajes(respuestasCorregidas)
+  datos <- cbind(respuestasCorregidas, puntajes)
+  datos <- datos[order(datos[,ncol(datos)]), -ncol(datos)]
+  grupoInferior <- obtenerGrupoInferior(datos, proporcion)
+  grupoSuperior <- obtenerGrupoSuperior(datos, proporcion)
+
+  if (tipo == "dc1") {
+    dc <- (apply(grupoSuperior, 2, mean) - apply(grupoInferior, 2, mean))
+    return(round(dc, digitos))
+  }
+
+  if (tipo == "dc2") {
+    dc <- apply(grupoSuperior, 2, sum) / (apply(grupoSuperior, 2, sum) + apply(grupoInferior, 2, sum))
+    return(round(dc, digitos))
+  }
+
+  stop("Tipo de \u00edndice de discriminaci\u00f3n no existe. Valores v\u00e1lidos: 'dc1' o 'dc2'.")
+
+}
+
+
+#' Frecuencia de distractores
+#'
+#' Calcula la frecuencia o proporcion de las alternativas seleccionadas en
+#' cada ítem.
+#'
+#' @param respuestas Un data frame con las respuestas corregidas
+#' de los estudiantes.
+#' @param clave Un data frame con las respuestas correctas a cada pregunta.
+#' @param alternativas Un vector con las alternativas posibles como respuestas.
+#' @param frecuencia Un valor lógico que determina si la información
+#' se presenta como frecuencia (\code{TRUE}) o proporción (\code{FALSE}).
+#' Por defecto es \code{FALSE}
+#' @param digitos La cantidad de dígitos significativos que tendrá el resultado.
+#'
+#' @return Un data frame con los ítems como filas y las frecuencias de las
+#' alternativas como columnas. Si está presente la clave como parámetro, se
+#' agrega la alternativa correcta como columna.
+#'
+#' @seealso \code{\link{corregirRespuestas}}, \code{\link{datos}} y
+#' \code{\link{clave}}.
+#'
+#' @examples
+#' alternativas <- c("A", "B", "C", "D", "E")
+#' respuestas <- datos[,-1]
+#' calcularFrecuenciaDistractores(respuestas, clave, alternativas, frecuencia=TRUE)
+#'
+#' @export
+#'
+calcularFrecuenciaDistractores <- function(respuestas, clave=NULL, alternativas, frecuencia=FALSE, digitos=2){
+
+  output <- matrix(data = NA, nrow = ncol(respuestas), ncol = length(alternativas) + 1,
+                   dimnames = list(colnames(respuestas), c(alternativas, "NA")))
+
+  for (i in 1:nrow(output)) {
+    output[i,] <- table(factor(respuestas[,i], levels=alternativas), useNA="always")
+    if (frecuencia) {
+      output[i,] <- round(prop.table((output[i,])), digitos)
+    }
+  }
+
+  if (!is.null(clave)){
+    output <- cbind(as.data.frame(output), KEY=t(clave))
+  }
+
+  return(output)
+
+}
+
+
+#' Análisis de distractores
+#'
+#' Calcula la frecuencia o proporción de las alternativas seleccionadas por el
+#' grupo superior e inferior de estudiantes en cada ítem.
+#'
+#' @param respuestas Una matriz con las alternativas seleccionadas por los
+#' estudiantes en cada ítem.
+#' @param clave  Un data frame con las alternativas correctas para cada ítem.
+#' @param alternativas Un vector con las alternativas posibles para cada ítem.
+#' @param proporcion Proporción del total de estudiantes que constituyen los
+#' grupos superior e inferior.
+#'
+#' @return Una lista en la cual cada elemento corresponde a un ítem. Para cada
+#' ítem se calcula la frecuencia o proporción de las alternativas seleccionadas
+#' por el grupo superior y por el grupo inferior de estudiantes.
+#'
+#' @references Morales, P. (2009). Análisis de ítem en las pruebas objetivas.
+#' Madrid. Recuperado de \url{https://educrea.cl/wp-content/uploads/2014/11/19-nov-analisis-de-items-en-las-pruebas-objetivas.pdf}
+#'
+#' @seealso \code{\link{calcularFrecuenciaDistractores}}, \code{\link{datos}} y \code{\link{clave}}.
+#'
+#' @examples
+#' respuestas <- datos[,-1]
+#' alternativas <- LETTERS[1:5]
+#' analizarDistractores(respuestas, clave, alternativas)
+#'
+#' @export
+#'
+analizarDistractores <- function(respuestas, clave, alternativas, proporcion=0.25) {
+  respuestasCorregidas <- corregirRespuestas(respuestas, clave)
+  puntajes <- calcularPuntajes(respuestasCorregidas)
+  resp <- factorizarRespuestas(respuestas, alternativas)
+  datos <- cbind(resp, puntajes)
+  datos <- datos[order(datos[,ncol(datos)]), -ncol(datos)]
+  gInf <- obtenerGrupoInferior(datos, proporcion)
+  gSup <- obtenerGrupoSuperior(datos, proporcion)
+  output <- list()
+  for (i in 1:ncol(respuestas)){
+    output[[i]] <- rbind.data.frame(table(gSup[,i]), table(gInf[,i]))
+    names <- alternativas
+    names[names == clave[,i]] <- paste("*", clave[,i], sep = "")
+    colnames(output[[i]]) <- names
+    rownames(output[[i]]) <- c("gSup", "gInf")
+  }
+  names(output) <- colnames(respuestas)
+  return(output)
+}
+
+
+#' Correlación biserial puntual.
+#'
+#' Calcula la \href{https://sites.google.com/site/tecnicasdeinvestigaciond38/estadisticas-no-parametricas/3-4-coeficiente-biseral-de-punto}{correlación biserial puntual}
+#' para cada alternativa de cada ítem con respecto al puntaje obtenido en la prueba.
+#'
+#' @param respuestas Un data frame con las alternativas seleccionadas por los
+#' estudiantes a cada ítem de la prueba.
+#' @param clave Un data frame con la alternativa correcta para cada ítem.
+#' @param alternativas Un vector con las alternativas posibles para cada ítem.
+#' @param correccionPje Un valor lógico para usar o no la corrección de puntaje.
+#' La corrección de puntaje consiste en restar del puntaje total el punto obtenido
+#' por el ítem analizado.
+#' @param digitos La cantidad de dígitos significativos que tendrá el resultado.
+#'
+#' @return Un data frame con la correlación biserial puntual para cada alternativa
+#' en cada ítem.
+#'
+#' @references Attorresi, H, Galibert, M. y Aguerri, M. (1999). Valoración de los
+#' ejercicios en las pruebas de rendimiento escolar. Educación Matemática. Vol. 11 No. 3, pp. 104-119.
+#' Recuperado de \url{http://www.revista-educacion-matematica.org.mx/descargas/Vol11/3/10Attorresi.pdf}
+#'
+#' @seealso \code{\link{analizarDistractores}}, \code{\link{calcularFrecuenciaDistractores}}
+#' \code{\link{datos}} y \code{\link{clave}}.
+#'
+#' @examples
+#' respuestas <- datos[, -1]
+#' alternativas <- LETTERS[1:5]
+#' pBis(respuestas, clave, alternativas)
+#'
+#' @export
+#'
+pBis <- function(respuestas, clave, alternativas, correccionPje=TRUE, digitos=2) {
+
+  nItem <- ncol(respuestas)
+  nChoice <- length(alternativas)
+
+  output <- matrix(data = NA, nrow = nItem, ncol = nChoice,
+                   dimnames = list(colnames(respuestas), alternativas))
+  rownames(output) <- colnames(respuestas)
+  colnames(output) <- alternativas
+
+  respCorregidas <- corregirRespuestas(respuestas, clave)
+  puntajes <- calcularPuntajes(respCorregidas)
+
+  for (i in 1:nItem){
+    for (j in 1:nChoice) {
+      choice <- ifelse(respuestas[,i]==alternativas[j], 1, 0)
+      choice[is.na(choice)] <- 0
+        output[i,j] = rpb(choice, puntajes, correccionPje)
+    }
+  }
+
+  output <- round(output, digitos)
+  output <- cbind(as.data.frame(output), KEY=t(clave))
+
+  return(output)
+
+}
+
+
+#' Análisis gráfico de ítems.
+#'
+#' El análisis gráfico de ítems (agi) permite visualizar las alternativas que eligen
+#' los estudiantes según su desempeño general en la prueba. El agi proporciona
+#' información esencial y fácilmente interpretable acerca de características técnicas
+#' del ítem tales como su dificultad y poder de discriminación.
+#'
+#' \if{html}{\figure{i01.jpeg}{options: width=500 alt="Figura: Análisis gráfico ítem 01."}}
+#'
+#' @param respuestas Un data frame con las alternativas seleccionadas por los estudiantes
+#' en cada ítem de la prueba.
+#' @param clave Un data frame con las alternativas correctas para cada ítem.
+#' @param alternativas Un vector con las alternativas posibles para cada ítem.
+#' @param nGrupos Número de grupos en los que se categorizarán los estudiantes
+#' según el puntaje obtenido en la prueba.
+#' @param digitos La cantidad de dígitos significativos que tendrá el resultado.
+#'
+#' @return Una lista con dos listas en su interior. La primera sublista contiene
+#' a su vez otra lista con los los datos utilizados en los gráficos para cada ítem.
+#' La segunda sublista contiene una lista con los gráficos de cada ítem.
+#'
+#' @references Guadalupe de los Santos (2010). Manual para el análisis gráfico de ítems.
+#' Universidad Autónoma de Baja California. Recuperado de
+#' \url{http://www.educacionbc.edu.mx/departamentos/evaluacion/eacademicos/archivos/jornadasBC/MANUAL_PAGI.pdf}
+#'
+#' @examples
+#' respuestas <- datos[,-1]
+#' alternativas <- LETTERS[1:5]
+#' plots <- agi(respuestas, clave, alternativas)
+#' plots$datos$i01
+#' plots$plots$i01
+#'
+#' @export
+#'
+#' @import reshape ggplot2
+#'
+agi <- function(respuestas, clave, alternativas, nGrupos=4, digitos=2) {
+
+  nItems <- ncol(respuestas)
+  nOpciones <- length(alternativas)
+
+  respuestasCorregidas <- corregirRespuestas(respuestas, clave)
+  puntajes <- calcularPuntajes(respuestasCorregidas)
+
+  scoreGroups <- cut(puntajes, breaks=nGrupos)
+  sgLevels <- levels(scoreGroups)
+
+  lowerLimits <- as.numeric(sub("\\((.+),.*", "\\1", sgLevels))
+  upperLimits <- as.numeric(sub("[^,]*,([^]]*)\\]","\\1",sgLevels))
+  limites <- unique( c(lowerLimits, upperLimits) )
+
+  sgMeans <- rowMeans(cbind(lowerLimits, upperLimits))
+
+  sgIndexes <- vector("list", nGrupos)
+  names(sgIndexes) <- levels(scoreGroups)
+  for(j in 1:nGrupos){
+    sgIndexes[[j]]=which(scoreGroups==sgLevels[j])
+  }
+
+  pBiserial <- pBis(respuestas, clave, alternativas)[,-(nOpciones+1)]
+
+  datos <- vector("list", nItems)
+  plots <- vector("list", nItems)
+  names(datos) <- colnames(respuestas)
+  names(plots) <- colnames(respuestas)
+
+  tmp <- matrix(nrow = nGrupos, ncol = nOpciones)
+  colnames(tmp) <- alternativas
+  rownames(tmp) <- c(1:nGrupos)
+
+  for (i in 1:nItems){
+
+    for(g in 1:nGrupos){
+      for(o in 1:nOpciones){
+        tmp[g,o] <- length(which(respuestas[sgIndexes[[g]],i] == alternativas[o])) / length(sgIndexes[[g]])
+      }
+    }
+
+    tmp <- as.data.frame(tmp)
+    names(tmp) <- ifelse(alternativas == clave[,i],
+                         paste(c("*"), names(tmp), sep = ""),
+                         names(tmp))
+    datos[[i]] <- cbind(grupo=levels(scoreGroups), round(tmp, digitos))
+
+    names(tmp) <- ifelse(alternativas == clave[,i],
+                         paste(names(tmp), c("* ("), pBiserial[i,], c(")"), sep = ""),
+                         paste(names(tmp), c("  ("), pBiserial[i,], c(")"), sep = ""))
+
+    df <- reshape::melt(data = cbind(tmp,sgMeans), id.vars = "sgMeans")
+
+    plots[[i]] <- ggplot2::ggplot(df, ggplot2::aes_string(x="sgMeans", y="value", color="variable")) +
+      ggplot2::geom_line() +
+      ggplot2::geom_point(size=2) +
+      ggplot2::labs(title = paste("\u00CDtem ", i),
+           x="Puntaje",
+           y="Proporci\u00F3n de estudiantes", colour="Alternativa (pBis)") +
+      ggplot2::theme(plot.title = ggplot2::element_text(size=18, face="bold" ,hjust=0.5),
+            legend.position = "right",
+            legend.text = ggplot2::element_text(size=11, face="bold", hjust=0.5)) +
+      ggplot2::scale_x_continuous(limits = c(min(limites),max(limites)), breaks=round(limites,1)) +
+      ggplot2::scale_y_continuous(limits = c(0,1))
+
+  }
+
+  output <- list(datos, plots)
+  names(output) <- c("datos", "plots")
+
+  return(output)
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

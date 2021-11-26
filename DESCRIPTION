@@ -11,13 +11,17 @@ Description: Functions for analyzing multiple choice items. These analyses inclu
   frecuency and point-biserial correlation for each distractor and the graphical
   analysis of each item.
 License: MIT + file LICENSE
+Depends:
+  R (>= 2.10)
+Imports: 
+    ggplot2,
+    reshape
 Language: es
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
-Depends: 
-    R (>= 2.10)
 LazyData: true
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+

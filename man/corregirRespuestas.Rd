@@ -2,22 +2,22 @@
 % Please edit documentation in R/itan.R
 \name{corregirRespuestas}
 \alias{corregirRespuestas}
-\title{Correcci\enc{ó}{o}n de respuestas}
+\title{Corrección de respuestas}
 \usage{
 corregirRespuestas(respuestas, clave)
 }
 \arguments{
 \item{respuestas}{Un data frame con las alternativas seleccionadas por los
-estudiantes en cada \enc{í}{i}tem.}
+estudiantes en cada ítem.}
 
-\item{clave}{Una data frame con la alternativa correcta para cada \enc{í}{i}tem.}
+\item{clave}{Una data frame con la alternativa correcta para cada ítem.}
 }
 \value{
 Un data frame con los aciertos (1) o errores (0) de
-cada estudiante en cada \enc{í}{i}tem.
+cada estudiante en cada ítem.
 }
 \description{
-La funci\enc{ó}{o}n corregir respuestas transforma las respuestas de los estudiantes
+La función corregir respuestas transforma las respuestas de los estudiantes
 a puntaje. El puntaje puede ser un \code{1}, si la respuesta es correcta, o un
 \code{0}, si la respuesta es incorrecta. Los valores \code{NA} reciben puntaje
 \code{0}.
