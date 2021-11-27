@@ -260,13 +260,17 @@ calcularIndiceDiscriminacion <- function(respuestasCorregidas, tipo="dc1", propo
 #'
 calcularFrecuenciaDistractores <- function(respuestas, clave=NULL, alternativas, frecuencia=FALSE, digitos=2){
 
-  output <- matrix(data = NA, nrow = ncol(respuestas), ncol = length(alternativas) + 1,
-                   dimnames = list(colnames(respuestas), c(alternativas, "NA")))
+  resp <- factorizarRespuestas(respuestas, alternativas)
+  rows <- ncol(resp)
+  cols <- length(alternativas)
 
-  for (i in 1:nrow(output)) {
-    output[i,] <- table(factor(respuestas[,i], levels=alternativas), useNA="always")
+  output <- matrix(NA, rows, cols)
+  colnames(output) <- alternativas
+
+  for (i in 1:rows) {
+    output[i,] <- table(resp[[i]], useNA="no")
     if (frecuencia) {
-      output[i,] <- round(prop.table((output[i,])), digitos)
+      output[i,] <- round(output[i,]/nrow(resp), digitos)
     }
   }
 
@@ -401,8 +405,8 @@ pBis <- function(respuestas, clave, alternativas, correccionPje=TRUE, digitos=2)
 #' figura se puede observar que todos los estudiantes del grupo 4 (mejor desempeño)
 #' seleccionaron la alternativa correcta D, mientras que el 25% de los estudiantes
 #' del grupo 1 (peor desempeño) seleccionaron esta opción.
+#'
 #' \if{html}{\figure{i50.jpeg}{options: width=500 alt="Figura: Análisis gráfico ítem 01."}}
-#' \if{latex}{\figure{i50.jpeg}{options: width=7cm}}
 #'
 #' @param respuestas Un data frame con las alternativas seleccionadas por los estudiantes
 #' en cada ítem de la prueba.
@@ -424,15 +428,15 @@ pBis <- function(respuestas, clave, alternativas, correccionPje=TRUE, digitos=2)
 #' respuestas <- datos[,-1]
 #' alternativas <- LETTERS[1:5]
 #'
-#' plots <- agi(respuestas, clave, alternativas)
+#' dataplots <- agi(respuestas, clave, alternativas)
 #'
-#' plots$datos$i01
-#' plots$datos$i25
-#' plots$datos$i50
+#' dataplots$datos$i01
+#' dataplots$datos$i25
+#' dataplots$datos$i50
 #'
-#' plots$plots$i01
-#' plots$plots$i25
-#' plots$plots$i50
+#' dataplots$plots$i01
+#' dataplots$plots$i25
+#' dataplots$plots$i50
 #'
 #' @import reshape ggplot2
 #' @export
@@ -479,19 +483,18 @@ agi <- function(respuestas, clave, alternativas, nGrupos=4, digitos=2) {
     }
 
     props <- as.data.frame(props)
+    colnames(props) <- ifelse(alternativas == clave[[i]],
+                         paste(c("*"), alternativas, sep = ""),
+                         alternativas)
+
+    datos[[i]] <- cbind(grupo=levels(scoreGroups), format(round(props, digitos), nsmall=digitos))
+
     colnames(props) <- alternativas
-    colnames(props) <- ifelse(alternativas == clave[,i],
-                         paste(c("*"), colnames(props), sep = ""),
-                         colnames(props))
+    colnames(props) <- ifelse(alternativas == clave[[i]],
+                              paste(alternativas, c("* ("), format(pBiserial[i,], nsmall=2), c(")"), sep = ""),
+                              paste(alternativas, c("  ("), format(pBiserial[i,], nsmall=2), c(")"), sep = ""))
 
-    datos[[i]] <- cbind(grupo=levels(scoreGroups), round(props, digitos))
-
-    colnames(props) <- alternativas
-    colnames(props) <- ifelse(alternativas == clave[,i],
-                         paste(colnames(props), c("* ("), format(pBiserial[i,], nsmall=2), c(")"), sep = ""),
-                         paste(colnames(props), c("  ("), format(pBiserial[i,], nsmall=2), c(")"), sep = ""))
-
-    df <- reshape::melt(data = cbind(props,sgMeans), id.vars = "sgMeans")
+    df <- reshape::melt(data = cbind(props, sgMeans), id.vars = "sgMeans")
 
     plots[[i]] <- ggplot2::ggplot(df, ggplot2::aes_string(x="sgMeans", y="value", color="variable")) +
       ggplot2::geom_line() +

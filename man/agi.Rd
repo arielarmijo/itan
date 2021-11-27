@@ -37,21 +37,22 @@ una alternativa determinada se muestra en el eje Y. Por ejemplo, en la siguiente
 figura se puede observar que todos los estudiantes del grupo 4 (mejor desempeño)
 seleccionaron la alternativa correcta D, mientras que el 25\% de los estudiantes
 del grupo 1 (peor desempeño) seleccionaron esta opción.
-j0K5A2g8Ym63kFxI57Ao0735ljb5s1UI-\if{latex}{\figure{i50.jpeg}{options: width=7cm}}
+
+\if{html}{\figure{i50.jpeg}{options: width=500 alt="Figura: Análisis gráfico ítem 01."}}
 }
 \examples{
 respuestas <- datos[,-1]
 alternativas <- LETTERS[1:5]
 
-plots <- agi(respuestas, clave, alternativas)
+dataplots <- agi(respuestas, clave, alternativas)
 
-plots$datos$i01
-plots$datos$i25
-plots$datos$i50
+dataplots$datos$i01
+dataplots$datos$i25
+dataplots$datos$i50
 
-plots$plots$i01
-plots$plots$i25
-plots$plots$i50
+dataplots$plots$i01
+dataplots$plots$i25
+dataplots$plots$i50
 
 }
 \references{

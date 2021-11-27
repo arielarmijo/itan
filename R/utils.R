@@ -17,7 +17,7 @@ obtenerGrupoSuperior <- function(datos, proporcion) {
 
 factorizarRespuestas <- function(respuestas, alternativas) {
   for (i in 1:ncol(respuestas)) {
-    respuestas[,i] <- factor(respuestas[,i], alternativas)
+    respuestas[i] <- factor(respuestas[[i]], alternativas)
   }
   return(respuestas)
 }
