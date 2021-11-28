@@ -1,6 +1,6 @@
 Package: itan
 Title: Item Analysis for Multiple Choice Tests
-Version: 2.0.2
+Version: 2.0.3
 Authors@R: 
     person(given="Ariel", family="Armijo", email="arielarmijo@yahoo.es", role=c("aut", "cre"))
 Description: Functions for analyzing multiple choice items. These analyses include

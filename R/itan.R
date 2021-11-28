@@ -52,6 +52,7 @@
 #' @references
 #' Morales, P. (2009). Análisis de ítem en las pruebas objetivas. Madrid.
 #' Recuperado de \href{https://educrea.cl/wp-content/uploads/2014/11/19-nov-analisis-de-items-en-las-pruebas-objetivas.pdf}{análisis de ítems}
+#'
 #' Guadalupe de los Santos (2010). Manual para el análisis gráfico de ítems. Universidad Autónoma de Baja California.
 #' Recuperado de \href{http://www.educacionbc.edu.mx/departamentos/evaluacion/eacademicos/archivos/jornadasBC/MANUAL_PAGI.pdf}{manual_pagi.pdf}
 #'
@@ -378,7 +379,7 @@ analizarDistractores <- function(respuestas, clave, alternativas, proporcion=0.2
   for (i in 1:ncol(respuestas)){
     output[[i]] <- rbind.data.frame(table(gSup[,i]), table(gInf[,i]))
     names <- alternativas
-    names[names == clave[,i]] <- paste("*", clave[,i], sep = "")
+    names[names == clave[[i]]] <- paste("*", clave[[i]], sep = "")
     colnames(output[[i]]) <- names
     rownames(output[[i]]) <- c("gSup", "gInf")
   }

@@ -59,6 +59,7 @@ la calidad del ítem.
 \references{
 Morales, P. (2009). Análisis de ítem en las pruebas objetivas. Madrid.
 Recuperado de \href{https://educrea.cl/wp-content/uploads/2014/11/19-nov-analisis-de-items-en-las-pruebas-objetivas.pdf}{análisis de ítems}
+
 Guadalupe de los Santos (2010). Manual para el análisis gráfico de ítems. Universidad Autónoma de Baja California.
 Recuperado de \href{http://www.educacionbc.edu.mx/departamentos/evaluacion/eacademicos/archivos/jornadasBC/MANUAL_PAGI.pdf}{manual_pagi.pdf}
 }
