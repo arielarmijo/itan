@@ -39,7 +39,7 @@
 #'
 #' Las respuestas de los estudiantes sin procesar, junto con la clave de corrección,
 #' pueden utilizarse para hacer dos tipos de análisis de distractores con las funciones
-#' \code{\link{calcularFrecuenciaDistractores}} y \code{\link{analizarDistractores}}.
+#' \code{\link{calcularFrecuantiAlternativas}} y \code{\link{analizarAlternativas}}.
 #' También se puede calcular la correlación biserial puntual de cada alternativa
 #' con respecto al puntaje obtenido en la prueba con la función \code{\link{pBis}}.
 #'
@@ -289,7 +289,7 @@ calcularIndiceDiscriminacion <- function(respuestasCorregidas, tipo="dc1", propo
 }
 
 
-#' Frecuencia de distractores
+#' Frecuencia de alternativas
 #'
 #' Calcula la frecuencia o proporcion de las alternativas seleccionadas en
 #' cada ítem.
@@ -313,11 +313,11 @@ calcularIndiceDiscriminacion <- function(respuestasCorregidas, tipo="dc1", propo
 #' @examples
 #' alternativas <- c("A", "B", "C", "D", "E")
 #' respuestas <- datos[,-1]
-#' calcularFrecuenciaDistractores(respuestas, alternativas, clave, frecuencia=TRUE)
+#' calcularFrecuantiAlternativas(respuestas, alternativas, clave, frecuencia=TRUE)
 #'
 #' @export
 #'
-calcularFrecuenciaDistractores <- function(respuestas, alternativas, clave=NULL, frecuencia=FALSE, digitos=2){
+calcularFrecuenciaAlternativas <- function(respuestas, alternativas, clave=NULL, frecuencia=FALSE, digitos=2){
 
   resp <- factorizarRespuestas(respuestas, alternativas)
   rows <- ncol(resp)
@@ -342,12 +342,35 @@ calcularFrecuenciaDistractores <- function(respuestas, alternativas, clave=NULL,
 }
 
 
-#' Análisis de distractores
+#' Gráfico frecuencia alternativas
+#'
+#' Grafica la frecuencia con que cada alternativa fue seleccionada por los
+#' estudiantes en cada ítem.
+#'
+#' @param respuestas Un data frame con las alternativas seleccionadas por los
+#' estudiantes en cada ítem.
+#' @param clave (opcional) Un data frame con las alternativas correctas para cada
+#' ítem. Si se incluye este parámetro, se marcará la alternativa correcta en el eje x.
+#'
+#' @return Una lista en la que cada elemento corresponde a al gráfico de cada ítem.
+#' @export
+#'
+#' @examples
+graficarFrecuenciaAlternativas <- function(respuestas, clave=NULL) {
+  output  <- c();
+
+
+
+  return(output);
+}
+
+
+#' Análisis de alternativas
 #'
 #' Calcula la frecuencia o proporción de las alternativas seleccionadas por el
 #' grupo superior e inferior de estudiantes en cada ítem.
 #'
-#' @param respuestas Una matriz con las alternativas seleccionadas por los
+#' @param respuestas Un data frame con las alternativas seleccionadas por los
 #' estudiantes en cada ítem.
 #' @param clave  Un data frame con las alternativas correctas para cada ítem.
 #' @param alternativas Un vector con las alternativas posibles para cada ítem.
@@ -361,16 +384,16 @@ calcularFrecuenciaDistractores <- function(respuestas, alternativas, clave=NULL,
 #' @references Morales, P. (2009). Análisis de ítem en las pruebas objetivas.
 #' Madrid. Recuperado de \url{https://educrea.cl/wp-content/uploads/2014/11/19-nov-analisis-de-items-en-las-pruebas-objetivas.pdf}
 #'
-#' @seealso \code{\link{calcularFrecuenciaDistractores}}, \code{\link{datos}} y \code{\link{clave}}.
+#' @seealso \code{\link{calcularFrecuenciaAlternativas}}, \code{\link{datos}} y \code{\link{clave}}.
 #'
 #' @examples
 #' respuestas <- datos[,-1]
 #' alternativas <- LETTERS[1:5]
-#' analizarDistractores(respuestas, clave, alternativas)
+#' analizarAlternativas(respuestas, clave, alternativas)
 #'
 #' @export
 #'
-analizarDistractores <- function(respuestas, clave, alternativas, proporcion=0.25) {
+analizarAlternativas <- function(respuestas, clave, alternativas, proporcion=0.25) {
   respuestasCorregidas <- corregirRespuestas(respuestas, clave)
   puntajes <- calcularPuntajes(respuestasCorregidas)
   resp <- factorizarRespuestas(respuestas, alternativas)
@@ -412,7 +435,7 @@ analizarDistractores <- function(respuestas, clave, alternativas, proporcion=0.2
 #' ejercicios en las pruebas de rendimiento escolar. Educación Matemática. Vol. 11 No. 3, pp. 104-119.
 #' Recuperado de \url{http://www.revista-educacion-matematica.org.mx/descargas/Vol11/3/10Attorresi.pdf}
 #'
-#' @seealso \code{\link{analizarDistractores}}, \code{\link{calcularFrecuenciaDistractores}}
+#' @seealso \code{\link{analizarAlternativas}}, \code{\link{calcularFrecuantiAlternativas}}
 #' \code{\link{datos}} y \code{\link{clave}}.
 #'
 #' @examples
