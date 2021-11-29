@@ -4,10 +4,10 @@
 \alias{calcularPuntajes}
 \title{Cálculo de puntajes}
 \usage{
-calcularPuntajes(respuestas)
+calcularPuntajes(respuestasCorregidas)
 }
 \arguments{
-\item{respuestas}{Un data frame con el puntaje obtenido por los estudiantes
+\item{respuestasCorregidas}{Un data frame con el puntaje obtenido por los estudiantes
 en cada ítem.}
 }
 \value{
