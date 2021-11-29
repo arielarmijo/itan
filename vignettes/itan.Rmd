@@ -235,7 +235,7 @@ muestra en el siguiente ejemplo:
 
 ```{r}
 alternativas <- c(LETTERS[1:5], "*")
-fa <- calcularFrecuenciaDistractores(respuestas, alternativas, clave,frecuencia = FALSE)
+fa <- calcularFrecuenciaAlternativas(respuestas, alternativas, clave, frecuencia = FALSE)
 head(fa)
 ```
 
@@ -253,7 +253,7 @@ respuestas seleccionadas por el grupo superior e inferior.
 
 ```{r}
 alternativas <- c(LETTERS[1:5], "*")
-ad <- analizarDistractores(respuestas, clave, alternativas, proporcion = 0.25)
+ad <- analizarAlternativas(respuestas, clave, alternativas, proporcion = 0.25)
 ad$i01
 ad$i25
 ad$i50
