@@ -126,7 +126,7 @@ corregirRespuestas <- function(respuestas, clave){
 #' @export
 #'
 calcularPuntajes <- function(respuestasCorregidas){
-  return(apply(X = respuestas, MARGIN = 1, FUN = sum))
+  return(apply(X = respuestasCorregidas, MARGIN = 1, FUN = sum))
 }
 
 
