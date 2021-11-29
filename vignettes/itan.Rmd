@@ -239,6 +239,20 @@ fa <- calcularFrecuenciaAlternativas(respuestas, alternativas, clave, frecuencia
 head(fa)
 ```
 
+### Gráfico frecuencia alternativas
+
+El análisis anterior también puede mostrarse de manera gráfica con la función
+graficarFrecuenciaAlternativas.
+
+```{r}
+g <- graficarFrecuenciaAlternativas(respuestas, alternativas, clave)
+g$i01
+g$i02
+g$i03
+g$i04
+g$i05
+```
+
 ### Análisis de distractores
 
 Tabular la frecuencia en que cada alternativa es seleccionada por los
