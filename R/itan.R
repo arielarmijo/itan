@@ -349,19 +349,45 @@ calcularFrecuenciaAlternativas <- function(respuestas, alternativas, clave=NULL,
 #'
 #' @param respuestas Un data frame con las alternativas seleccionadas por los
 #' estudiantes en cada ítem.
+#' @param alternativas Un vector con las alternativas posibles como respuestas.
 #' @param clave (opcional) Un data frame con las alternativas correctas para cada
 #' ítem. Si se incluye este parámetro, se marcará la alternativa correcta en el eje x.
 #'
-#' @return Una lista en la que cada elemento corresponde a al gráfico de cada ítem.
+#' @return Una lista en la que cada elemento corresponde al gráfico de cada ítem.
 #' @export
 #'
 #' @examples
-graficarFrecuenciaAlternativas <- function(respuestas, clave=NULL) {
+#' alternativas <- c(LETTERS[1:5], "*")
+#' respuestas <- datos[,-1]
+#' grafico <- graficarFrecuantiAlternativas(respuestas, alternativas, clave)
+#' grafico$i01
+#' grafico$i025
+#' grafico$i025
+#'
+graficarFrecuenciaAlternativas <- function(respuestas, alternativas, clave=NULL) {
+
   output  <- c();
 
+  item <- ncol(respuestas)
+  fa <-calcularFrecuenciaAlternativas(respuestas, alternativas)
+  names <- colnames(fa)
+  for (i in 1:item) {
 
+    colnames(fa) <- ifelse(colnames(fa) == clave[[i]],
+                                paste(c("*"), colnames(fa), sep = ""),
+                                colnames(fa))
+    fam <- melt(fa[i,], id.vars = "item")
+    output[[i]] <- ggplot(fam, aes(x=variable, y=value, fill=variable)) +
+                   geom_col(show.legend = F) +
+                   labs(title = paste("\u00CDtem ", i),
+                        x="Alternativa",
+                        y="Frecuencia")
+    colnames(fa) <- names
+  }
+  names(output) <- colnames(respuestas)
 
   return(output);
+
 }
 
 
