@@ -57,7 +57,7 @@ indican mediante un '\*'.
 head(datos)
 ```
 
-Por otra parte, clave también es un data frames, pero contiene una sola
+Por otra parte, clave también es un data frame, pero contiene una sola
 observación y 50 variables. Corresponde a las respuestas correctas de la prueba.
 
 ```{r}
@@ -68,8 +68,8 @@ clave
 
 Para corregir las respuestas de los estudiantes es necesario en primer lugar
 quitar la columna de identificación. El data frame con las respuestas sin el id
-del estudiante, junto con la clave de corrección pueden ingresarse como
-argumentos de la función corregirRespuestas para obtener un data frame con unos
+del estudiante, junto con la clave de corrección, pueden ingresarse como
+argumentos en la función corregirRespuestas para obtener un data frame con unos
 y ceros. El 1 significa que el estudiante seleccionó la respuesta correcta,
 mientras que el 0 significa que seleccionó la respuesta incorrecta u omitió esta
 pregunta.
