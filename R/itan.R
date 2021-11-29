@@ -319,15 +319,17 @@ calcularIndiceDiscriminacion <- function(respuestasCorregidas, tipo="dc1", propo
 #'
 calcularFrecuenciaAlternativas <- function(respuestas, alternativas, clave=NULL, frecuencia=FALSE, digitos=2){
 
-  resp <- factorizarRespuestas(respuestas, alternativas)
-  rows <- ncol(resp)
+  rows <- ncol(respuestas)
   cols <- length(alternativas)
+  resp <- factorizarRespuestas(respuestas, alternativas)
+  alternativas[is.na(alternativas)] <- "NA"
 
   output <- matrix(NA, rows, cols)
   colnames(output) <- alternativas
+  rownames(output) <- c(1:rows)
 
   for (i in 1:rows) {
-    output[i,] <- table(resp[[i]], useNA="no")
+    output[i,] <- table(resp[[i]], useNA="ifany")
     if (frecuencia) {
       output[i,] <- round(output[i,]/nrow(resp), digitos)
     }
@@ -337,7 +339,7 @@ calcularFrecuenciaAlternativas <- function(respuestas, alternativas, clave=NULL,
     output <- cbind(as.data.frame(output), KEY=t(clave))
   }
 
-  return(output)
+  return(cbind(item=colnames(respuestas), as.data.frame(output)))
 
 }
 
