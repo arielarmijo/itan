@@ -447,8 +447,13 @@ analizarAlternativas <- function(respuestas, clave, alternativas, proporcion=0.2
 
 #' Correlación biserial puntual.
 #'
-#' Calcula la \href{https://sites.google.com/site/tecnicasdeinvestigaciond38/estadisticas-no-parametricas/3-4-coeficiente-biseral-de-punto}{correlación biserial puntual}
-#' para cada alternativa de cada ítem con respecto al puntaje obtenido en la prueba.
+#' Calcula la correlación biserial puntual para cada alternativa de cada ítem con
+#' respecto al puntaje obtenido en la prueba.
+#'
+#' Para su cálculo se utiliza la siguiente función:
+#' \deqn{
+#'     r_{bp} = \frac{\overline{X_{p}}-\overline{X_{q}}}{\sigma_{X}}\sqrt{p \cdot q}
+#' }
 #'
 #' @param respuestas Un data frame con las alternativas seleccionadas por los
 #' estudiantes a cada ítem de la prueba.

@@ -211,6 +211,31 @@ El coeficiente de correlación biserial puntual entre una alternativa y el
 puntaje total de la prueba permite determinar el nivel de asociación entre
 seleccionar una alternativa con el puntaje total de la prueba.
 
+Para su cálculo se utiliza la siguiente función:
+
+### $$
+ r_{bp} = \frac{\overline{X_{p}}-\overline{X_{q}}}{\sigma_{X}}\sqrt{p \cdot q}
+$$
+
+Donde
+
+-   $p$ es la proporción de estudiantes que respondió la alternativa examinada,
+
+-   $q$ es la proporción de estudiantes que seleccionó una alternativa diferente
+    a la alternativa examinada
+
+-   $\overline{X_{p}}$ es el promedio del puntaje obtenido en la prueba por los
+    estudiantes que seleccionaron la alternativa examinada.
+
+-   $\overline{X_{q}}$ es el promedio del puntaje obtenido en la prueba por los
+    estudiantes que no seleccionaron la alternativa en cuestión.
+
+-   $\sigma_X$ es la desviación estándar del puntaje obtenido en la prueba de
+    todos los estudiantes. Para su fórmula se utiliza la ecuación simplificada
+    de la desviación estándar poblacional: $$
+    \sigma_X = \sqrt{\sum_{i=1}^{N}\frac{X_i^2}{N} - \overline{X}^2}
+    $$
+
 Los resultados de este coeficiente permiten clasificar las preguntas en las
 siguientes categorías: excelente, si el valor que se obtiene es igual o superior
 a 0,40; buena, cuando el valor del índice es igual o superior a 0,30 pero

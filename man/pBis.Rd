@@ -25,8 +25,14 @@ Un data frame con la correlación biserial puntual para cada alternativa
 en cada ítem.
 }
 \description{
-Calcula la \href{https://sites.google.com/site/tecnicasdeinvestigaciond38/estadisticas-no-parametricas/3-4-coeficiente-biseral-de-punto}{correlación biserial puntual}
-para cada alternativa de cada ítem con respecto al puntaje obtenido en la prueba.
+Calcula la correlación biserial puntual para cada alternativa de cada ítem con
+respecto al puntaje obtenido en la prueba.
+}
+\details{
+Para su cálculo se utiliza la siguiente función:
+\deqn{
+    r_{bp} = \frac{\overline{X_{p}}-\overline{X_{q}}}{\sigma_{X}}\sqrt{p \cdot q}
+}
 }
 \examples{
 respuestas <- datos[, -1]
