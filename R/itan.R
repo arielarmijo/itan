@@ -8,14 +8,14 @@
 #' rápidamente su calidad.
 #'
 #' El paquete itan incluye datos para probar las funciones del paquete.
-#' La hoja de datos \code{\link{datos}} contiene las respuestas seleccionadas
+#' El data frame \code{\link{datos}} contiene las respuestas seleccionadas
 #' por 39 estudiantes en una prueba objetiva de 50 ítems de selección múltiple.
 #' Las alternativas posibles a cada ítem son 'A', 'B', 'C', 'D' y 'E', mientras
 #' que las respuestas omitidas se indican mediante un '*'.
-#' Cada estudiante tiene asociado un id único que figura en la columna 1 de la
-#' hoja de datos. Las columnas que representan los ítems están rotuladas como 'i01',
+#' Cada estudiante tiene asociado un id único que figura en la columna 1 del data
+#' frame. Las columnas que representan los ítems están rotuladas como 'i01',
 #' 'i02', ..., 'i50'.
-#' Por otro lado, la hoja de datos \code{\link{clave}} contiene las alternativas
+#' Por otro lado, el data frame \code{\link{clave}} contiene las alternativas
 #' correctas para cada ítem de la prueba.
 #'
 #'
@@ -24,20 +24,20 @@
 #' La función \code{\link{corregirRespuestas}} permite determinar si las alternativas
 #' seleccionadas por los estudiantes son correctas o incorrectas. Se asigna un 1
 #' si la respuesta es correcta y un 0 si es incorrecta. El data frame con valores
-#' binarios devuelto por esta función puede ser utilizada por la función
+#' binarios devuelto por esta función puede ser utilizado por la función
 #' \code{\link{calcularPuntajes}} para determinar el puntaje obtenido en la prueba.
 #'
-#' A partir de los puntajes obtenidos se puede calcular la calificación de cada
-#' estudiante con la función \code{\link{calcularNotas}}. Esta última función
+#' A partir de los puntajes obtenidos en la prueba se puede calcular la calificación
+#' de cada estudiante con la función \code{\link{calcularNotas}}. Esta última función
 #' utiliza el \href{https://es.wikipedia.org/wiki/Calificaciones_escolares_en_Chile}{sistema de calificación usado en Chile}:
-#' notas de 1.0 a 7.0 con nota de aprobación 4.0 y nivel de exigencia del 60\%.
+#' notas de 1.0 a 7.0, con nota de aprobación 4.0 y nivel de exigencia del 60\%.
 #'
 #' El data frame binario devuelto por la función \code{\link{corregirRespuestas}}
 #' también puede ser usado para calcular el índice de dificultad y dos tipos de
 #' índices de discriminación. Estas funciones son \code{\link{calcularIndiceDificultad}}
 #' y \code{\link{calcularIndiceDiscriminacion}}, respectivamente.
 #'
-#' Las respuestas de los estudiantes sin procesar junto con la clave de corrección
+#' Las respuestas de los estudiantes sin procesar, junto con la clave de corrección,
 #' pueden utilizarse para hacer dos tipos de análisis de distractores con las funciones
 #' \code{\link{calcularFrecuenciaDistractores}} y \code{\link{analizarDistractores}}.
 #' También se puede calcular la correlación biserial puntual de cada alternativa
@@ -110,7 +110,7 @@ corregirRespuestas <- function(respuestas, clave){
 #'
 #' Calcula el puntaje total obtenido en la prueba por cada estudiante.
 #'
-#' @param respuestas Un data frame con el puntaje obtenido por los estudiantes
+#' @param respuestasCorregidas Un data frame con el puntaje obtenido por los estudiantes
 #' en cada ítem.
 #'
 #' @return Un vector con el puntaje total obtenido en la pruebas por cada estudiante.
@@ -125,7 +125,7 @@ corregirRespuestas <- function(respuestas, clave){
 #'
 #' @export
 #'
-calcularPuntajes <- function(respuestas){
+calcularPuntajes <- function(respuestasCorregidas){
   return(apply(X = respuestas, MARGIN = 1, FUN = sum))
 }
 
