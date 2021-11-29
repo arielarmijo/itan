@@ -148,7 +148,9 @@ calcularPuntajes <- function(respuestas){
 #'
 #' @return Un data frame con las notas obtenidas por los estudiantes en la prueba.
 #'
-#' @references \href{https://escaladenotas.cl/?nmin=1.0&nmax=7.0&napr=4.0&exig=60.0&pmax=100.0&explicacion=1}{Explicación de fórmula general y cálculo específico}
+#' @references
+#' Pumarino, J. Escala de notas: Explicación de fórmula general y cálculo específico.
+#' Recuperado de \url{https://escaladenotas.cl/?nmin=1.0&nmax=7.0&napr=4.0&exig=60.0&pmax=100.0&explicacion=1}
 #'
 #' @seealso \code{\link{corregirRespuestas}}, \code{\link{calcularPuntajes}},
 #' \code{\link{datos}} y \code{\link{clave}}.

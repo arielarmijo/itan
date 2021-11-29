@@ -46,7 +46,8 @@ cbind(id=datos[1], puntaje, nota)
 
 }
 \references{
-\href{https://escaladenotas.cl/?nmin=1.0&nmax=7.0&napr=4.0&exig=60.0&pmax=100.0&explicacion=1}{Explicación de fórmula general y cálculo específico}
+Pumarino, J. Escala de notas: Explicación de fórmula general y cálculo específico.
+Recuperado de \url{https://escaladenotas.cl/?nmin=1.0&nmax=7.0&napr=4.0&exig=60.0&pmax=100.0&explicacion=1}
 }
 \seealso{
 \code{\link{corregirRespuestas}}, \code{\link{calcularPuntajes}},
