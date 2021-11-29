@@ -6,8 +6,8 @@
 \usage{
 calcularFrecuenciaDistractores(
   respuestas,
-  clave = NULL,
   alternativas,
+  clave = NULL,
   frecuencia = FALSE,
   digitos = 2
 )
@@ -16,9 +16,9 @@ calcularFrecuenciaDistractores(
 \item{respuestas}{Un data frame con las respuestas corregidas
 de los estudiantes.}
 
-\item{clave}{Un data frame con las respuestas correctas a cada pregunta.}
-
 \item{alternativas}{Un vector con las alternativas posibles como respuestas.}
+
+\item{clave}{Un data frame con las respuestas correctas a cada pregunta.}
 
 \item{frecuencia}{Un valor lógico que determina si la información
 se presenta como frecuencia (\code{TRUE}) o proporción (\code{FALSE}).
@@ -38,7 +38,7 @@ cada ítem.
 \examples{
 alternativas <- c("A", "B", "C", "D", "E")
 respuestas <- datos[,-1]
-calcularFrecuenciaDistractores(respuestas, clave, alternativas, frecuencia=TRUE)
+calcularFrecuenciaDistractores(respuestas, alternativas, clave, frecuencia=TRUE)
 
 }
 \seealso{

@@ -98,10 +98,10 @@ corregirRespuestas <- function(respuestas, clave){
                    dimnames = list(rownames(respuestas), colnames(respuestas)))
 
   clave <- toupper(clave)
+  output[is.na(output)] <- 0
   for (i in 1:nrow(respuestas)){
     output[i,] <- ifelse(toupper(respuestas[i,]) == clave, 1, 0)
   }
-  output[is.na(output)] <- 0
 
   return(as.data.frame(output))
 
@@ -313,11 +313,11 @@ calcularIndiceDiscriminacion <- function(respuestasCorregidas, tipo="dc1", propo
 #' @examples
 #' alternativas <- c("A", "B", "C", "D", "E")
 #' respuestas <- datos[,-1]
-#' calcularFrecuenciaDistractores(respuestas, clave, alternativas, frecuencia=TRUE)
+#' calcularFrecuenciaDistractores(respuestas, alternativas, clave, frecuencia=TRUE)
 #'
 #' @export
 #'
-calcularFrecuenciaDistractores <- function(respuestas, clave=NULL, alternativas, frecuencia=FALSE, digitos=2){
+calcularFrecuenciaDistractores <- function(respuestas, alternativas, clave=NULL, frecuencia=FALSE, digitos=2){
 
   resp <- factorizarRespuestas(respuestas, alternativas)
   rows <- ncol(resp)

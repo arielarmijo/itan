@@ -226,7 +226,19 @@ pb <- pBis(respuestas, clave, alternativas)
 head(pb)
 ```
 
-## Frecuencia de alternativas
+### Frecuencia de alternativas
+
+Para conocer la frecuencia en que cada alternativa fue seleccionada por los
+estudiantes se puede usar la función calcularFrecuenciaDistractores como se
+muestra en el siguiente ejemplo:
+
+```{r}
+alternativas <- c(LETTERS[1:5], "*")
+fa <- calcularFrecuenciaDistractores(respuestas, alternativas, clave,frecuencia = FALSE)
+head(fa)
+```
+
+### Análisis de distractores
 
 Tabular la frecuencia en que cada alternativa es seleccionada por los
 estudiantes con mejor y peor desempeño es un tipo de análisis sencillo y fácil
@@ -240,10 +252,10 @@ respuestas seleccionadas por el grupo superior e inferior.
 
 ```{r}
 alternativas <- c(LETTERS[1:5], "*")
-fa <- analizarDistractores(respuestas, clave, alternativas, proporcion = 0.25)
-fa$i01
-fa$i25
-fa$i50
+ad <- analizarDistractores(respuestas, clave, alternativas, proporcion = 0.25)
+ad$i01
+ad$i25
+ad$i50
 ```
 
 Con esta tabulación es posible determinar buenos y malos distractores, así como
