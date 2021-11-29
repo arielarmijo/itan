@@ -39,7 +39,7 @@
 #'
 #' Las respuestas de los estudiantes sin procesar, junto con la clave de corrección,
 #' pueden utilizarse para hacer dos tipos de análisis de distractores con las funciones
-#' \code{\link{calcularFrecuantiAlternativas}} y \code{\link{analizarAlternativas}}.
+#' \code{\link{calcularFrecuenciaAlternativas}} y \code{\link{analizarAlternativas}}.
 #' También se puede calcular la correlación biserial puntual de cada alternativa
 #' con respecto al puntaje obtenido en la prueba con la función \code{\link{pBis}}.
 #'
@@ -311,9 +311,9 @@ calcularIndiceDiscriminacion <- function(respuestasCorregidas, tipo="dc1", propo
 #' \code{\link{clave}}.
 #'
 #' @examples
-#' alternativas <- c("A", "B", "C", "D", "E")
+#' alternativas <- c("A", "B", "C", "D", "E", "*")
 #' respuestas <- datos[,-1]
-#' calcularFrecuantiAlternativas(respuestas, alternativas, clave, frecuencia=TRUE)
+#' calcularFrecuenciaAlternativas(respuestas, alternativas, clave, frecuencia=TRUE)
 #'
 #' @export
 #'
@@ -356,15 +356,18 @@ calcularFrecuenciaAlternativas <- function(respuestas, alternativas, clave=NULL,
 #' ítem. Si se incluye este parámetro, se marcará la alternativa correcta en el eje x.
 #'
 #' @return Una lista en la que cada elemento corresponde al gráfico de cada ítem.
-#' @export
+#'
+#' @seealso \code{\link{datos}} y \code{\link{clave}}.
 #'
 #' @examples
 #' alternativas <- c(LETTERS[1:5], "*")
 #' respuestas <- datos[,-1]
-#' grafico <- graficarFrecuantiAlternativas(respuestas, alternativas, clave)
+#' grafico <- graficarFrecuenciaAlternativas(respuestas, alternativas, clave)
 #' grafico$i01
 #' grafico$i025
 #' grafico$i025
+#'
+#' @export
 #'
 graficarFrecuenciaAlternativas <- function(respuestas, alternativas, clave=NULL) {
 
@@ -379,11 +382,11 @@ graficarFrecuenciaAlternativas <- function(respuestas, alternativas, clave=NULL)
                                 paste(c("*"), colnames(fa), sep = ""),
                                 colnames(fa))
     fam <- melt(fa[i,], id.vars = "item")
-    output[[i]] <- ggplot(fam, aes(x=variable, y=value, fill=variable)) +
-                   geom_col(show.legend = F) +
-                   labs(title = paste("\u00CDtem ", i),
-                        x="Alternativa",
-                        y="Frecuencia")
+    output[[i]] <- ggplot2::ggplot(fam, aes_string(x="variable", y="value", fill="variable")) +
+                   ggplot2::geom_col(show.legend = F) +
+                   ggplot2::labs(title = paste("\u00CDtem ", i),
+                                 x="Alternativa",
+                                 y="Frecuencia")
     colnames(fa) <- names
   }
   names(output) <- colnames(respuestas)
@@ -463,7 +466,7 @@ analizarAlternativas <- function(respuestas, clave, alternativas, proporcion=0.2
 #' ejercicios en las pruebas de rendimiento escolar. Educación Matemática. Vol. 11 No. 3, pp. 104-119.
 #' Recuperado de \url{http://www.revista-educacion-matematica.org.mx/descargas/Vol11/3/10Attorresi.pdf}
 #'
-#' @seealso \code{\link{analizarAlternativas}}, \code{\link{calcularFrecuantiAlternativas}}
+#' @seealso \code{\link{analizarAlternativas}}, \code{\link{calcularFrecuenciaAlternativas}}
 #' \code{\link{datos}} y \code{\link{clave}}.
 #'
 #' @examples

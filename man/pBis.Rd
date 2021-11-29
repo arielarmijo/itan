@@ -40,6 +40,6 @@ ejercicios en las pruebas de rendimiento escolar. Educación Matemática. Vol. 1
 Recuperado de \url{http://www.revista-educacion-matematica.org.mx/descargas/Vol11/3/10Attorresi.pdf}
 }
 \seealso{
-\code{\link{analizarDistractores}}, \code{\link{calcularFrecuenciaDistractores}}
+\code{\link{analizarAlternativas}}, \code{\link{calcularFrecuenciaAlternativas}}
 \code{\link{datos}} y \code{\link{clave}}.
 }

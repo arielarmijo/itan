@@ -45,7 +45,7 @@ y \code{\link{calcularIndiceDiscriminacion}}, respectivamente.
 
 Las respuestas de los estudiantes sin procesar, junto con la clave de corrección,
 pueden utilizarse para hacer dos tipos de análisis de distractores con las funciones
-\code{\link{calcularFrecuenciaDistractores}} y \code{\link{analizarDistractores}}.
+\code{\link{calcularFrecuenciaAlternativas}} y \code{\link{analizarAlternativas}}.
 También se puede calcular la correlación biserial puntual de cada alternativa
 con respecto al puntaje obtenido en la prueba con la función \code{\link{pBis}}.
 
