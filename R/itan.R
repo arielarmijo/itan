@@ -97,8 +97,9 @@ corregirRespuestas <- function(respuestas, clave){
   output <- matrix(data = NA, nrow = nrow(respuestas), ncol = ncol(respuestas),
                    dimnames = list(rownames(respuestas), colnames(respuestas)))
 
+  clave <- toupper(clave)
   for (i in 1:nrow(respuestas)){
-    output[i,] <- ifelse(casefold(respuestas[i,], upper=T) == casefold(clave, upper=T), 1, 0)
+    output[i,] <- ifelse(toupper(respuestas[i,]) == clave, 1, 0)
   }
   output[is.na(output)] <- 0
 
