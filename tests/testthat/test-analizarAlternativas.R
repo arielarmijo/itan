@@ -1,9 +1,9 @@
-test_that("analizarDistractores", {
+test_that("analizarAlternativas", {
 
   respuestas <- datos[,-1]
   alternativas <- LETTERS[1:5]
 
-  actual <- analizarDistractores(respuestas, clave, alternativas)
+  actual <- analizarAlternativas(respuestas, clave, alternativas)
   gSup <- list(c(0, 0, 0, 1, 9),
                c(0, 0, 1, 9, 0),
                c(2, 1, 6, 0, 0),
