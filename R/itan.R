@@ -377,7 +377,6 @@ graficarFrecuenciaAlternativas <- function(respuestas, alternativas, clave=NULL)
   fa <-calcularFrecuenciaAlternativas(respuestas, alternativas)
   names <- colnames(fa)
   for (i in 1:item) {
-
     colnames(fa) <- ifelse(colnames(fa) == clave[[i]],
                                 paste(c("*"), colnames(fa), sep = ""),
                                 colnames(fa))
@@ -386,7 +385,8 @@ graficarFrecuenciaAlternativas <- function(respuestas, alternativas, clave=NULL)
                    ggplot2::geom_col(show.legend = F) +
                    ggplot2::labs(title = paste("\u00CDtem ", i),
                                  x="Alternativa",
-                                 y="Frecuencia")
+                                 y="Frecuencia") +
+                   ggplot2::theme(plot.title = ggplot2::element_text(size=18, face="bold" ,hjust=0.5))
     colnames(fa) <- names
   }
   names(output) <- colnames(respuestas)
