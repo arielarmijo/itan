@@ -22,6 +22,12 @@ factorizarRespuestas <- function(respuestas, alternativas) {
   return(respuestas)
 }
 
+dicotomize <- function(x, choice) {
+  output <- ifelse(x==choice, 1, 0)
+  output[is.na(output)] <- 0
+  return(output)
+}
+
 sigma <- function(x) {
   return(sqrt(sum((x-mean(x))^2)/length(x)))
 }

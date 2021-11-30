@@ -447,10 +447,10 @@ analizarAlternativas <- function(respuestas, clave, alternativas, proporcion=0.2
 
 #' Correlación biserial puntual.
 #'
-#' Calcula la correlación biserial puntual para cada alternativa de cada ítem con
+#' Calcula la correlación biserial puntual para cada alternativa en cada ítem con
 #' respecto al puntaje obtenido en la prueba.
 #'
-#' Para su cálculo se utiliza la siguiente función:
+#' Para su cálculo se utiliza la siguiente ecuación:
 #' \deqn{
 #'     r_{bp} = \frac{\overline{X_{p}}-\overline{X_{q}}}{\sigma_{X}}\sqrt{p \cdot q}
 #' }
@@ -485,25 +485,22 @@ pBis <- function(respuestas, clave, alternativas, correccionPje=TRUE, digitos=2)
 
   nItem <- ncol(respuestas)
   nChoice <- length(alternativas)
-
-  output <- matrix(data = NA, nrow = nItem, ncol = nChoice,
-                   dimnames = list(colnames(respuestas), alternativas))
-  rownames(output) <- colnames(respuestas)
-  colnames(output) <- alternativas
-
+  names <- list(1:nItem, alternativas)
+  item <- colnames(respuestas)
   respCorregidas <- corregirRespuestas(respuestas, clave)
   puntajes <- calcularPuntajes(respCorregidas)
+
+  output <- matrix(data = NA, nrow = nItem, ncol = nChoice, dimnames = names)
 
   for (i in 1:nItem){
     for (j in 1:nChoice) {
       choice <- ifelse(respuestas[,i]==alternativas[j], 1, 0)
       choice[is.na(choice)] <- 0
-        output[i,j] = rpb(choice, puntajes, correccionPje)
+      output[i,j] = round(rpb(choice, puntajes, correccionPje), digitos)
     }
   }
 
-  output <- round(output, digitos)
-  output <- cbind(as.data.frame(output), KEY=t(clave))
+  output <- cbind(item, as.data.frame(output), KEY=t(clave))
 
   return(output)
 

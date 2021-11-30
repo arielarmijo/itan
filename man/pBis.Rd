@@ -25,11 +25,11 @@ Un data frame con la correlación biserial puntual para cada alternativa
 en cada ítem.
 }
 \description{
-Calcula la correlación biserial puntual para cada alternativa de cada ítem con
+Calcula la correlación biserial puntual para cada alternativa en cada ítem con
 respecto al puntaje obtenido en la prueba.
 }
 \details{
-Para su cálculo se utiliza la siguiente función:
+Para su cálculo se utiliza la siguiente ecuación:
 \deqn{
     r_{bp} = \frac{\overline{X_{p}}-\overline{X_{q}}}{\sigma_{X}}\sqrt{p \cdot q}
 }

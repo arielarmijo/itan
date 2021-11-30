@@ -46,6 +46,19 @@ test_that("factorizarRespuestas", {
 
 })
 
+test_that("dicotomize", {
+
+  x <- datos$i01
+  x[x=="A"] <- 1
+  x[x!="1"] <- 0
+
+  expected <- as.integer(x)
+  actual <- dicotomize(datos$i01, "A")
+
+  expect_equal(actual, expected)
+
+})
+
 test_that("sigma", {
 
   x <- c(20,25,35,32,34,41,31,30,24,38)
