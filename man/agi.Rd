@@ -20,9 +20,9 @@ según el puntaje obtenido en la prueba.}
 \item{digitos}{La cantidad de dígitos significativos que tendrá el resultado.}
 }
 \value{
-Una lista con dos listas en su interior. La primera sublista contiene
-a su vez otra lista con los los datos utilizados en los gráficos para cada ítem.
-La segunda sublista contiene una lista con los gráficos de cada ítem.
+Una lista en la que cada elemento corresponde a un ítem de la prueba.
+Cada elemento de la lista contiene a su vez una lista con dos elementos.
+El primero de ellos corresponde a los datos; mientras que el segundo, al gráfico.
 }
 \description{
 El análisis gráfico de ítems (agi) permite visualizar las alternativas que eligen
@@ -44,15 +44,16 @@ del grupo 1 (peor desempeño) seleccionaron esta opción.
 respuestas <- datos[,-1]
 alternativas <- LETTERS[1:5]
 
-dataplots <- agi(respuestas, clave, alternativas)
+item <- agi(respuestas, clave, alternativas)
 
-dataplots$datos$i01
-dataplots$datos$i25
-dataplots$datos$i50
+item$i01$datos
+item$i01$plot
 
-dataplots$plots$i01
-dataplots$plots$i25
-dataplots$plots$i50
+item$i25$datos
+item$i25$plot
+
+item$i50$datos
+item$i50$plot
 
 }
 \references{

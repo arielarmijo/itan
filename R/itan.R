@@ -223,17 +223,7 @@ calcularIndiceDificultad <- function(respuestasCorregidas, proporcion=0.5, digit
 #'
 #' Calcula el índice de discriminación para cada ítem.
 #'
-#' @param respuestasCorregidas Un data frame con los puntajes obtenidos por los
-#' estudiantes en cada pregunta.
-#' @param tipo Una cadena de texto que indica el tipo de índice de discriminación
-#' a calcular. Valores posibles son: "dc1" o "dc2"
-#' @param proporcion Proporción de estudiantes que forman parte de los grupos superior
-#' e inferior. Valores habituales son 0.25, 0.27 y 0.33.
-#' @param digitos La cantidad de dígitos significativos que tendrá el resultado.
-#'
-#' @return Un vector con el índice de discriminación para cada ítem.
-#'
-#' @details Los índices de discriminación permiten determinar
+#' Los índices de discriminación permiten determinar
 #' si un ítem diferencia entre estudiantes con alta o baja habilidad.
 #' Se calculan a partir del grupo de estudiantes con mejor y peor puntuación
 #' en el test.
@@ -250,6 +240,16 @@ calcularIndiceDificultad <- function(respuestasCorregidas, proporcion=0.5, digit
 #' grupo superior en relación al total de aciertos de ambos grupos. Los valores de
 #' este índice van de 0 a 1. Pueden considerarse satisfactorios valores mayores a 0.5.
 #' Este índice es independiente del nivel de dificultad de la pregunta.
+#'
+#' @param respuestasCorregidas Un data frame con los puntajes obtenidos por los
+#' estudiantes en cada pregunta.
+#' @param tipo Una cadena de texto que indica el tipo de índice de discriminación
+#' a calcular. Valores posibles son: "dc1" o "dc2"
+#' @param proporcion Proporción de estudiantes que forman parte de los grupos superior
+#' e inferior. Valores habituales son 0.25, 0.27 y 0.33.
+#' @param digitos La cantidad de dígitos significativos que tendrá el resultado.
+#'
+#' @return Un vector con el índice de discriminación para cada ítem.
 #'
 #' @references Morales, P. (2009). Análisis de ítem en las pruebas objetivas.
 #' Madrid. Recuperado de \url{https://educrea.cl/wp-content/uploads/2014/11/19-nov-analisis-de-items-en-las-pruebas-objetivas.pdf}
@@ -371,24 +371,26 @@ calcularFrecuenciaAlternativas <- function(respuestas, alternativas, clave=NULL,
 #'
 graficarFrecuenciaAlternativas <- function(respuestas, alternativas, clave=NULL) {
 
-  output  <- c();
-
   item <- ncol(respuestas)
   fa <-calcularFrecuenciaAlternativas(respuestas, alternativas)
   names <- colnames(fa)
+
+  output  <- c();
+
   for (i in 1:item) {
     colnames(fa) <- ifelse(colnames(fa) == clave[[i]],
-                                paste(c("*"), colnames(fa), sep = ""),
-                                colnames(fa))
+                           paste(c("*"), colnames(fa), sep = ""),
+                           colnames(fa))
     fam <- melt(fa[i,], id.vars = "item")
     output[[i]] <- ggplot2::ggplot(fam, aes_string(x="variable", y="value", fill="variable")) +
                    ggplot2::geom_col(show.legend = F) +
                    ggplot2::labs(title = paste("\u00CDtem ", i),
                                  x="Alternativa",
                                  y="Frecuencia") +
-                   ggplot2::theme(plot.title = ggplot2::element_text(size=18, face="bold" ,hjust=0.5))
+                   ggplot2::theme(plot.title = element_text(size=18, face="bold" ,hjust=0.5))
     colnames(fa) <- names
   }
+
   names(output) <- colnames(respuestas)
 
   return(output);
@@ -531,9 +533,9 @@ pBis <- function(respuestas, clave, alternativas, correccionPje=TRUE, digitos=2)
 #' según el puntaje obtenido en la prueba.
 #' @param digitos La cantidad de dígitos significativos que tendrá el resultado.
 #'
-#' @return Una lista con dos listas en su interior. La primera sublista contiene
-#' a su vez otra lista con los los datos utilizados en los gráficos para cada ítem.
-#' La segunda sublista contiene una lista con los gráficos de cada ítem.
+#' @return Una lista en la que cada elemento corresponde a un ítem de la prueba.
+#' Cada elemento de la lista contiene a su vez una lista con dos elementos.
+#' El primero de ellos corresponde a los datos; mientras que el segundo, al gráfico.
 #'
 #' @references Guadalupe de los Santos (2010). Manual para el análisis gráfico de ítems.
 #' Universidad Autónoma de Baja California. Recuperado de
@@ -543,21 +545,23 @@ pBis <- function(respuestas, clave, alternativas, correccionPje=TRUE, digitos=2)
 #' respuestas <- datos[,-1]
 #' alternativas <- LETTERS[1:5]
 #'
-#' dataplots <- agi(respuestas, clave, alternativas)
+#' item <- agi(respuestas, clave, alternativas)
 #'
-#' dataplots$datos$i01
-#' dataplots$datos$i25
-#' dataplots$datos$i50
+#' item$i01$datos
+#' item$i01$plot
 #'
-#' dataplots$plots$i01
-#' dataplots$plots$i25
-#' dataplots$plots$i50
+#' item$i25$datos
+#' item$i25$plot
+#'
+#' item$i50$datos
+#' item$i50$plot
 #'
 #' @import reshape ggplot2
 #' @export
 #'
 agi <- function(respuestas, clave, alternativas, nGrupos=4, digitos=2) {
 
+  item <- colnames(respuestas)
   nItems <- ncol(respuestas)
   nOpciones <- length(alternativas)
 
@@ -579,11 +583,13 @@ agi <- function(respuestas, clave, alternativas, nGrupos=4, digitos=2) {
     sgIndexes[[j]]=which(scoreGroups==sgLevels[j])
   }
 
-  pBiserial <- pBis(respuestas, clave, alternativas)[,-(nOpciones+1)]
+  pBiserial <- pBis(respuestas, clave, alternativas)[, 2:(nOpciones+1)]
 
+  output <- vector("list", nItems)
+  names(output) <- item
   datos <- vector("list", nItems)
-  plots <- vector("list", nItems)
   names(datos) <- colnames(respuestas)
+  plots <- vector("list", nItems)
   names(plots) <- colnames(respuestas)
 
   props <- matrix(nrow = nGrupos, ncol = nOpciones)
@@ -601,8 +607,9 @@ agi <- function(respuestas, clave, alternativas, nGrupos=4, digitos=2) {
     colnames(props) <- ifelse(alternativas == clave[[i]],
                          paste(c("*"), alternativas, sep = ""),
                          alternativas)
-
-    datos[[i]] <- cbind(grupo=levels(scoreGroups), format(round(props, digitos), nsmall=digitos))
+    output[[i]] <- vector("list", 2)
+    names(output[[i]]) <- c("datos", "plot")
+    output[[i]][[1]] <- cbind(grupo=levels(scoreGroups), format(round(props, digitos), nsmall=digitos))
 
     colnames(props) <- alternativas
     colnames(props) <- ifelse(alternativas == clave[[i]],
@@ -610,23 +617,22 @@ agi <- function(respuestas, clave, alternativas, nGrupos=4, digitos=2) {
                               paste(alternativas, c("  ("), format(pBiserial[i,], nsmall=2), c(")"), sep = ""))
 
     df <- reshape::melt(data = cbind(props, sgMeans), id.vars = "sgMeans")
-
-    plots[[i]] <- ggplot2::ggplot(df, ggplot2::aes_string(x="sgMeans", y="value", color="variable")) +
+    output[[i]][[2]] <- ggplot2::ggplot(df, aes_string(x="sgMeans", y="value", color="variable")) +
       ggplot2::geom_line() +
       ggplot2::geom_point(size=2) +
       ggplot2::labs(title = paste("\u00CDtem ", i),
-           x="Puntaje",
-           y="Proporci\u00F3n de estudiantes", colour="Alternativa (pBis)") +
-      ggplot2::theme(plot.title = ggplot2::element_text(size=18, face="bold" ,hjust=0.5),
-            legend.position = "right",
-            legend.text = ggplot2::element_text(size=11, face="bold", hjust=0.5)) +
+                    x="Puntaje",
+                    y="Proporci\u00F3n de estudiantes", colour="Alternativa (pBis)") +
+      ggplot2::theme(plot.title = element_text(size=18, face="bold" ,hjust=0.5),
+                     legend.position = "top",
+                     legend.text = element_text(size=11, face="bold", hjust=0.5)) +
       ggplot2::scale_x_continuous(limits = c(min(limites),max(limites)), breaks=round(limites,1)) +
       ggplot2::scale_y_continuous(limits = c(0,1))
 
   }
 
-  output <- list(datos, plots)
-  names(output) <- c("datos", "plots")
+
+  #names(output) <- c("datos", "plots")
 
   return(output)
 

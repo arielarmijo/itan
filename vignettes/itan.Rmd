@@ -75,10 +75,9 @@ y ceros. El 1 significa que el estudiante seleccionó la respuesta correcta,
 mientras que el 0 significa que seleccionó la respuesta incorrecta u omitió esta
 pregunta.
 
-```{r}
+```{r paged.print=TRUE}
 respuestas <- datos[,-1]
 respuestasCorregidas <- corregirRespuestas(respuestas, clave)
-
 head(respuestasCorregidas)
 ```
 
@@ -87,7 +86,7 @@ head(respuestasCorregidas)
 Las respuestas corregidas pueden usarse para calcular el puntaje obtenido por
 cada estudiante y, posteriormente, calcular la nota correspondiente.
 
-```{r}
+```{r paged.print=TRUE}
 puntaje <- calcularPuntajes(respuestasCorregidas)
 nota <- calcularNotas(puntaje)
 resultados <- cbind(id=datos$id, puntaje, nota)
@@ -213,7 +212,7 @@ seleccionar una alternativa con el puntaje total de la prueba.
 
 Para su cálculo se utiliza la siguiente función:
 
-### $$
+$$
  r_{bp} = \frac{\overline{X_{p}}-\overline{X_{q}}}{\sigma_{X}}\sqrt{p \cdot q}
 $$
 
@@ -269,13 +268,12 @@ head(fa)
 El análisis anterior también puede mostrarse de manera gráfica con la función
 graficarFrecuenciaAlternativas.
 
-```{r}
+```{r fig.show='hold', fig.dim=c(3.3, 3.3)}
 g <- graficarFrecuenciaAlternativas(respuestas, alternativas, clave)
 g$i01
 g$i02
 g$i03
 g$i04
-g$i05
 ```
 
 ### Análisis de distractores
@@ -315,19 +313,21 @@ con menores puntuaciones, mientras que el grupo 4, a los de mayores puntajes. En
 el gráfico se representa la proporción de estudiantes de cada grupo que
 seleccionó una alternativa dada.
 
-```{r}
+```{r out.height="100%"}
 alternativas <- LETTERS[1:5]
 
-plots <- agi(respuestas, clave, alternativas)
+item <- agi(respuestas, clave, alternativas)
 
-plots$datos$i01
-plots$plots$i01
+item$i01$datos
+item$i25$datos
+item$i50$datos
 
-plots$datos$i25
-plots$plots$i25
+```
 
-plots$datos$i50
-plots$plots$i50
+```{r fig.show='hold', fig.dim=c(7,5)}
+item$i01$plot
+item$i25$plot
+item$i50$plot
 ```
 
 Un ítem de buena calidad debería mostrar una proporción creciente de estudiantes
