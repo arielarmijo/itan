@@ -9,10 +9,6 @@
 
 <!-- badges: end -->
 
-``` r
-library(itan)
-```
-
 El paquete itan tiene como finalidad ayudar a profesores a corregir,
 calificar y analizar pruebas objetivas. Para ello, este paquete incluye
 funciones que permiten calcular el puntaje y calificación obtenido por
@@ -29,6 +25,7 @@ Para instalar la versión de desarrollo del paquete itan desde
 ``` r
 # install.packages("devtools")
 devtools::install_github("arielarmijo/itan")
+library(itan)
 ```
 
 ## Ejemplo

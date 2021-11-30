@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: end -->
 
-```{r, setup}
+```{r setup, include=FALSE}
 library(itan)
 ```
 
@@ -34,6 +34,7 @@ Para instalar la versión de desarrollo del paquete itan desde [GitHub](https://
 ``` r
 # install.packages("devtools")
 devtools::install_github("arielarmijo/itan")
+library(itan)
 ```
 
 ## Ejemplo
