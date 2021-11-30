@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/arielarmijo/itan/workflows/R-CMD-check/badge.svg)](https://github.com/arielarmijo/itan/actions)
+
 <!-- badges: end -->
 
 El paquete itan tiene como finalidad ayudar a profesores a corregir, calificar y analizar pruebas objetivas. Para ello, este paquete incluye funciones que permiten calcular el puntaje y calificación obtenido por estudiantes; así como también, funciones para analizar los ítems del test. Entre estas últimas destaca el análisis gráfico de ítems que permite visualizar las características técnicas del ítem y determinar rápidamente su calidad.
@@ -36,9 +37,8 @@ devtools::install_github("arielarmijo/itan")
 El paquete itan incluye dos datos binarios de ejemplo llamados datos y clave. Datos contiene las respuestas de 39 estudiantes a una prueba de 50 ítems y clave contiene las respuestas correctas a cada ítem.
 
 ```{r example}
-library(itan)
-head(datos)
-clave
+str(datos, list.len=6)
+str(clave, list.len=5)
 ```
 
 Para calcular el puntaje alcanzado en la prueba y su respectiva calificación puede usarse el siguiente script:
@@ -46,9 +46,10 @@ Para calcular el puntaje alcanzado en la prueba y su respectiva calificación pu
 ```{r cars}
 respuestas <- datos[,-1]
 respuestasCorregidas <- corregirRespuestas(respuestas, clave)
+head(respuestasCorregidas)
 puntaje <- calcularPuntajes(respuestasCorregidas)
 nota <- calcularNotas(puntaje)
-head(cbind(id=datos$id, respuestasCorregidas, puntaje, nota))
+head(cbind(id=datos$id, puntaje, nota))
 ```
 
 Además de calcular el puntaje y calificación, es posible analizar los ítems de la prueba. Para calcular el índice de dificultad y los índices de discriminación de cada ítem se puede ejecutar las siguientes líneas de código:
@@ -68,7 +69,7 @@ biserial <- pBis(respuestas, clave, alternativas)
 head(biserial)
 ```
 
-La frecuencia en que se eligió cada alternativa en cada ítem puede hacerse de forma numérica o gráfica:
+La frecuencia con que se eligió cada alternativa en cada ítem puede hacerse de forma numérica o gráfica:
 
 ```{r}
 fa <- calcularFrecuenciaAlternativas(respuestas, alternativas, clave, frecuencia = FALSE)
@@ -80,7 +81,7 @@ gfa <- graficarFrecuenciaAlternativas(respuestas, alternativas, clave)
 gfa$i01
 ```
 
-El paquete itan también implementa el análisis gráfico de ítems que permite resumir las características técnicas del ítem de manera gráfica, lo que facilita su análisis:
+El paquete itan también implementa el análisis gráfico de ítems que permite resumir las características técnicas del ítem de manera visual, lo que facilita su análisis:
 
 ```{r}
 item <- agi(respuestas, clave, alternativas)
