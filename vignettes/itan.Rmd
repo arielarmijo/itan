@@ -7,13 +7,14 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
   markdown: 
-    wrap: 80
+    wrap: 120
 ---
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  out.width = "100%"
 )
 ```
 
@@ -25,18 +26,15 @@ library(itan)
 
 ## Introducción
 
-El paquete itan tiene como finalidad ayudar a profesores a corregir, calificar y
-analizar pruebas objetivas. Para ello, este paquete incluye funciones que
-permiten calcular el puntaje y calificación obtenido por estudiantes; así como
-también, funciones para analizar los ítems del test. Entre estas últimas destaca
-el análisis gráfico de ítems que permite visualizar las características técnicas
-del ítem y determinar rápidamente su calidad.
+El paquete itan tiene como finalidad ayudar a profesores a corregir, calificar y analizar pruebas objetivas. Para ello,
+este paquete incluye funciones que permiten calcular el puntaje y calificación obtenido por estudiantes; así como
+también, funciones para analizar los ítems del test. Entre estas últimas destaca el análisis gráfico de ítems que
+permite visualizar las características técnicas del ítem y determinar rápidamente su calidad.
 
 ## Datos de ejemplo
 
-El paquete itan incluye dos archivos de ejemplo. El archivo datos.csv contiene
-las respuestas de 39 estudiantes a una prueba de 50 ítems y el archivo clave.csv
-contiene las respuestas correctas a cada ítem.
+El paquete itan incluye dos archivos de ejemplo. El archivo datos.csv contiene las respuestas de 39 estudiantes a una
+prueba de 50 ítems y el archivo clave.csv contiene las respuestas correctas a cada ítem.
 
 Los siguientes comandos cargan estos archivos en el entorno global.
 
@@ -48,18 +46,16 @@ clave.csv <- system.file("extdata", "clave.csv", package = "itan", mustWork = TR
 clave <- read.csv(clave.csv)
 ```
 
-Como se puede apreciar, datos corresponde a un data frame con 39 observaciones y
-51 variables. La primera variable correponde al identificador de cada
-estudiante. El resto de las columnas corresponde a los ítems de la prueba. Las
-alternativas posibles a cada ítem son A, B, C, D y E. Las preguntas omitidas se
-indican mediante un '\*'.
+Como se puede apreciar, datos corresponde a un data frame con 39 observaciones y 51 variables. La primera variable
+correponde al identificador de cada estudiante. El resto de las columnas corresponde a los ítems de la prueba. Las
+alternativas posibles a cada ítem son A, B, C, D y E. Las preguntas omitidas se indican mediante un '\*'.
 
 ```{r}
 head(datos)
 ```
 
-Por otra parte, clave también es un data frame, pero contiene una sola
-observación y 50 variables. Corresponde a las respuestas correctas de la prueba.
+Por otra parte, clave también es un data frame, pero contiene una sola observación y 50 variables. Corresponde a las
+respuestas correctas de la prueba.
 
 ```{r}
 clave
@@ -67,13 +63,11 @@ clave
 
 ## Corrección de respuestas
 
-Para corregir las respuestas de los estudiantes es necesario en primer lugar
-quitar la columna de identificación. El data frame con las respuestas sin el id
-del estudiante, junto con la clave de corrección, pueden ingresarse como
-argumentos en la función corregirRespuestas para obtener un data frame con unos
-y ceros. El 1 significa que el estudiante seleccionó la respuesta correcta,
-mientras que el 0 significa que seleccionó la respuesta incorrecta u omitió esta
-pregunta.
+Para corregir las respuestas de los estudiantes es necesario en primer lugar quitar la columna de identificación. El
+data frame con las respuestas sin el id del estudiante, junto con la clave de corrección, pueden ingresarse como
+argumentos en la función corregirRespuestas para obtener un data frame con unos y ceros. El 1 significa que el
+estudiante seleccionó la respuesta correcta, mientras que el 0 significa que seleccionó la respuesta incorrecta u omitió
+esta pregunta.
 
 ```{r paged.print=TRUE}
 respuestas <- datos[,-1]
@@ -83,8 +77,8 @@ head(respuestasCorregidas)
 
 ## Cálculo de puntajes y notas
 
-Las respuestas corregidas pueden usarse para calcular el puntaje obtenido por
-cada estudiante y, posteriormente, calcular la nota correspondiente.
+Las respuestas corregidas pueden usarse para calcular el puntaje obtenido por cada estudiante y, posteriormente,
+calcular la nota correspondiente.
 
 ```{r paged.print=TRUE}
 puntaje <- calcularPuntajes(respuestasCorregidas)
@@ -96,19 +90,17 @@ head(resultados)
 
 ## Análisis de ítems
 
-El paquete itan posee funciones que permiten analizar los ítems de pruebas
-objetivas. Es posible calcular el índice de dificultad, la frecuencia de cada
-alternativa, índices de discriminación tipo 1 y tipo2, y realizar un análisis
-gráfico de los ítems.
+El paquete itan posee funciones que permiten analizar los ítems de pruebas objetivas. Es posible calcular el índice de
+dificultad, la frecuencia de cada alternativa, índices de discriminación tipo 1 y tipo2, y realizar un análisis gráfico
+de los ítems.
 
 ### Índice de dificultad
 
-El índice de dificultad de un ítem muestra la proporción de aciertos. Sus
-valores van de 0 a 1, siendo 0 un ítem muy difícil y 1 un ítem muy fácil.
+El índice de dificultad de un ítem muestra la proporción de aciertos. Sus valores van de 0 a 1, siendo 0 un ítem muy
+difícil y 1 un ítem muy fácil.
 
-Para su cálculo pueden considerarse las respuestas de todos los estudiantes, o
-solo las de los estudiantes con mejor y peor desempeño. Esto se indica como
-argumento del parámetro proporcion en la función calcularIndiceDificultad:
+Para su cálculo pueden considerarse las respuestas de todos los estudiantes, o solo las de los estudiantes con mejor y
+peor desempeño. Esto se indica como argumento del parámetro proporcion en la función calcularIndiceDificultad:
 
 ```{r}
 p <- calcularIndiceDificultad(respuestasCorregidas, proporcion = 0.25)
@@ -116,36 +108,30 @@ p
 summary(p, digits = 2)
 ```
 
-En el ejemplo anterior se calcula el índice de dificultad considerando el 25% de
-los estudiantes con menores puntajes y el 25% con mejores puntuaciones. Una
-proporción de 0.5 indica que se toman todos los resultados.
+En el ejemplo anterior se calcula el índice de dificultad considerando el 25% de los estudiantes con menores puntajes y
+el 25% con mejores puntuaciones. Una proporción de 0.5 indica que se toman todos los resultados.
 
 ### Índices de discriminación
 
-Los índices de discriminación expresan en qué medida una pregunta diferencia
-entre estudiantes con mejor y peor desempeño. Existen distintas maneras de
-calcular este indicador. Estas se muestran a continuación.
+Los índices de discriminación expresan en qué medida una pregunta diferencia entre estudiantes con mejor y peor
+desempeño. Existen distintas maneras de calcular este indicador. Estas se muestran a continuación.
 
 #### Índice de discriminación tipo 1
 
-Corresponde a la diferencia entre la proporción de aciertos del grupo superior,
-menos la proporción de aciertos en el grupo inferior. Como ambos grupos son de
-igual tamaño, su cálculo puede obtenerse mediante la siguiente ecuación.
+Corresponde a la diferencia entre la proporción de aciertos del grupo superior, menos la proporción de aciertos en el
+grupo inferior. Como ambos grupos son de igual tamaño, su cálculo puede obtenerse mediante la siguiente ecuación.
 
 $$
 dc1 = \frac{A_s - A_i}{N} 
 $$
 
-A mayor diferencia entre los aciertos del grupo superior e inferior, mayor es
-poder de discriminación del ítem. Los valores máximos de este índice son -1 y 1.
-Un índice de 1 significa que todos los estudiantes del grupo superior acertaron
-esta pregunta, mientras que nadie del grupo inferior lo hizo. En otras palabras,
-el ítem discrimina muy bien entre estudiantes que saben y los que no. Un índice
--1 indica todo lo contrario; todos los estudiantes del grupo inferior acertaron,
-mientras que nadie del grupo superior respondió correctamente este ítem. Las
-preguntas con índices negativos deben ser revisadas ya que es probable que éstas
-estén mal formuladas, sean ambiguas o que la la clave de corrección sea
-incorrecta.
+A mayor diferencia entre los aciertos del grupo superior e inferior, mayor es poder de discriminación del ítem. Los
+valores máximos de este índice son -1 y 1. Un índice de 1 significa que todos los estudiantes del grupo superior
+acertaron esta pregunta, mientras que nadie del grupo inferior lo hizo. En otras palabras, el ítem discrimina muy bien
+entre estudiantes que saben y los que no. Un índice -1 indica todo lo contrario; todos los estudiantes del grupo
+inferior acertaron, mientras que nadie del grupo superior respondió correctamente este ítem. Las preguntas con índices
+negativos deben ser revisadas ya que es probable que éstas estén mal formuladas, sean ambiguas o que la la clave de
+corrección sea incorrecta.
 
 ```{r}
 # Se toma el 27% de los estudiantes con mejor y peor desempeño
@@ -154,50 +140,43 @@ dc1 <- calcularIndiceDiscriminacion(respuestasCorregidas, tipo = "dc1", proporci
 dc1
 ```
 
-Este índice depende del nivel de dificultad de la pregunta. Si la pregunta es
-muy fácil (ambos grupos la responden bien) o muy difícil (ambos grupos la
-responden mal) el índice tiene un valor de 0. Esto no indica que la pregunta
-esté mal formulada, solo indica que no discrimina. Por esta razón, se recomienda
-complementar este índice con el índice de discriminación tipo 2.
+Este índice depende del nivel de dificultad de la pregunta. Si la pregunta es muy fácil (ambos grupos la responden bien)
+o muy difícil (ambos grupos la responden mal) el índice tiene un valor de 0. Esto no indica que la pregunta esté mal
+formulada, solo indica que no discrimina. Por esta razón, se recomienda complementar este índice con el índice de
+discriminación tipo 2.
 
 #### Índice de discriminación tipo 2
 
-Este índice indica la proporción de aciertos en el grupo superior con respecto
-al número total de aciertos. Puede considerarse satisfactoria si es al menos
-superior a 0.50; es decir, más de la mitad de los aciertos pertenecen a los
+Este índice indica la proporción de aciertos en el grupo superior con respecto al número total de aciertos. Puede
+considerarse satisfactoria si es al menos superior a 0.50; es decir, más de la mitad de los aciertos pertenecen a los
 estudiantes del grupo superior.
 
 $$
 dc2 = \frac{A_s}{A_s + A_i}
 $$
 
-Para calcular este segundo índice, se debe indicar como argumento en la función
-calcularIndiceDiscriminación:
+Para calcular este segundo índice, se debe indicar como argumento en la función calcularIndiceDiscriminación:
 
 ```{r}
 dc2 <- calcularIndiceDiscriminacion(respuestasCorregidas, tipo = "dc2", proporcion = 0.25)
 dc2
 ```
 
-Como se mencionó anteriormente, este índice muestra cuánto discrimina un ítem
-independientemente si es muy fácil o muy difícil.
+Como se mencionó anteriormente, este índice muestra cuánto discrimina un ítem independientemente si es muy fácil o muy
+difícil.
 
-Por ejemplo, si los grupos superior e inferior están conformados por 10
-estudiantes y los 10 estudiantes del grupo superior respondieron correctamente,
-mientras que 9 del grupo inferior acertaron, esto indica que es ítem es muy
-fácil. Sus índices de discriminación dc1 y dc2 son, respectivamente, 0.1 y 0.53.
-En base a lo anterior, podemos afirmar que este ítem discrimina poco (recordar
-que el dc2 debe ser mayor o igual a 0.5 para indicar discriminación).
+Por ejemplo, si los grupos superior e inferior están conformados por 10 estudiantes y los 10 estudiantes del grupo
+superior respondieron correctamente, mientras que 9 del grupo inferior acertaron, esto indica que es ítem es muy fácil.
+Sus índices de discriminación dc1 y dc2 son, respectivamente, 0.1 y 0.53. En base a lo anterior, podemos afirmar que
+este ítem discrimina poco (recordar que el dc2 debe ser mayor o igual a 0.5 para indicar discriminación).
 
-En el otro extremo, si suponemos un ítem muy difícil en el que solo 2 de los 10
-estudiantes del grupo superior acertaron y ninguno del grupo inferior lo hizo,
-nos dan unos índices de discriminación dc1 = 0.2 y dc2 = 1.0. Este ítem
-claramente discrimina bien, ya que solo estudiantes del grupo superior lo
-respondieron correctamente. Sin embargo, el dc1 no lo refleja por la dificultad
-de esta pregunta.
+En el otro extremo, si suponemos un ítem muy difícil en el que solo 2 de los 10 estudiantes del grupo superior acertaron
+y ninguno del grupo inferior lo hizo, nos dan unos índices de discriminación dc1 = 0.2 y dc2 = 1.0. Este ítem claramente
+discrimina bien, ya que solo estudiantes del grupo superior lo respondieron correctamente. Sin embargo, el dc1 no lo
+refleja por la dificultad de esta pregunta.
 
-Por las razones indicadas anteriormente, se recomienda considerar los índices de
-discriminación en conjunto con el de dificultad.
+Por las razones indicadas anteriormente, se recomienda considerar los índices de discriminación en conjunto con el de
+dificultad.
 
 ```{r}
 indices <- cbind(p, dc1, dc2)
@@ -206,9 +185,8 @@ head(indices)
 
 ### Correlación Biserial Puntual
 
-El coeficiente de correlación biserial puntual entre una alternativa y el
-puntaje total de la prueba permite determinar el nivel de asociación entre
-seleccionar una alternativa con el puntaje total de la prueba.
+El coeficiente de correlación biserial puntual entre una alternativa y el puntaje total de la prueba permite determinar
+el nivel de asociación entre seleccionar una alternativa con el puntaje total de la prueba.
 
 Para su cálculo se utiliza la siguiente función:
 
@@ -220,30 +198,26 @@ Donde
 
 -   $p$ es la proporción de estudiantes que respondió la alternativa examinada,
 
--   $q$ es la proporción de estudiantes que seleccionó una alternativa diferente
-    a la alternativa examinada
+-   $q$ es la proporción de estudiantes que seleccionó una alternativa diferente a la alternativa examinada
 
--   $\overline{X_{p}}$ es el promedio del puntaje obtenido en la prueba por los
-    estudiantes que seleccionaron la alternativa examinada.
+-   $\overline{X_{p}}$ es el promedio del puntaje obtenido en la prueba por los estudiantes que seleccionaron la
+    alternativa examinada.
 
--   $\overline{X_{q}}$ es el promedio del puntaje obtenido en la prueba por los
-    estudiantes que no seleccionaron la alternativa en cuestión.
+-   $\overline{X_{q}}$ es el promedio del puntaje obtenido en la prueba por los estudiantes que no seleccionaron la
+    alternativa en cuestión.
 
--   $\sigma_X$ es la desviación estándar del puntaje obtenido en la prueba de
-    todos los estudiantes. Para su fórmula se utiliza la ecuación simplificada
-    de la desviación estándar poblacional: $$
+-   $\sigma_X$ es la desviación estándar del puntaje obtenido en la prueba de todos los estudiantes. Para su fórmula se
+    utiliza la ecuación simplificada de la desviación estándar poblacional: $$
     \sigma_X = \sqrt{\sum_{i=1}^{N}\frac{X_i^2}{N} - \overline{X}^2}
     $$
 
-Los resultados de este coeficiente permiten clasificar las preguntas en las
-siguientes categorías: excelente, si el valor que se obtiene es igual o superior
-a 0,40; buena, cuando el valor del índice es igual o superior a 0,30 pero
-inferior 0,40; regular, si el valor del índice es igual o superior a 0,20 pero
-no llega a 0,30; pobre, si el valor está comprendido entre 0 y 0,20, y pésimo,
-si el valor es inferior a 0.
+Los resultados de este coeficiente permiten clasificar las preguntas en las siguientes categorías: excelente, si el
+valor que se obtiene es igual o superior a 0,40; buena, cuando el valor del índice es igual o superior a 0,30 pero
+inferior 0,40; regular, si el valor del índice es igual o superior a 0,20 pero no llega a 0,30; pobre, si el valor está
+comprendido entre 0 y 0,20, y pésimo, si el valor es inferior a 0.
 
-Cuanto mayor sea su valor, mayor será la relación entre la obtención de una
-puntuación alta en el test y el haber contestado correctamente la pregunta.
+Cuanto mayor sea su valor, mayor será la relación entre la obtención de una puntuación alta en el test y el haber
+contestado correctamente la pregunta.
 
 ```{r}
 alternativas <- LETTERS[1:5]
@@ -253,9 +227,8 @@ head(pb)
 
 ### Frecuencia de alternativas
 
-Para conocer la frecuencia en que cada alternativa fue seleccionada por los
-estudiantes se puede usar la función calcularFrecuenciaDistractores como se
-muestra en el siguiente ejemplo:
+Para conocer la frecuencia en que cada alternativa fue seleccionada por los estudiantes se puede usar la función
+calcularFrecuenciaDistractores como se muestra en el siguiente ejemplo:
 
 ```{r}
 alternativas <- c(LETTERS[1:5], "*")
@@ -265,10 +238,9 @@ head(fa)
 
 ### Gráfico frecuencia alternativas
 
-El análisis anterior también puede mostrarse de manera gráfica con la función
-graficarFrecuenciaAlternativas.
+El análisis anterior también puede mostrarse de manera gráfica con la función graficarFrecuenciaAlternativas.
 
-```{r fig.show='hold', fig.dim=c(3.3, 3.3)}
+```{r fig.show='hold', fig.dim=c(3, 3), out.width="45%"}
 g <- graficarFrecuenciaAlternativas(respuestas, alternativas, clave)
 g$i01
 g$i02
@@ -278,15 +250,13 @@ g$i04
 
 ### Análisis de distractores
 
-Tabular la frecuencia en que cada alternativa es seleccionada por los
-estudiantes con mejor y peor desempeño es un tipo de análisis sencillo y fácil
-de interpretar.
+Tabular la frecuencia en que cada alternativa es seleccionada por los estudiantes con mejor y peor desempeño es un tipo
+de análisis sencillo y fácil de interpretar.
 
-Para realizar este análisis primero hay que en ordenar a los estudiantes por el
-puntaje obtenido en la prueba. A continuación se seleccionan un porcentaje de
-estudiantes con la puntuación más baja y más alta. Suele usarse el 25% en cada
-caso. Otros valores razonables son 27% y 33%. Por último, se tabulan las
-respuestas seleccionadas por el grupo superior e inferior.
+Para realizar este análisis primero hay que en ordenar a los estudiantes por el puntaje obtenido en la prueba. A
+continuación se seleccionan un porcentaje de estudiantes con la puntuación más baja y más alta. Suele usarse el 25% en
+cada caso. Otros valores razonables son 27% y 33%. Por último, se tabulan las respuestas seleccionadas por el grupo
+superior e inferior.
 
 ```{r}
 alternativas <- c(LETTERS[1:5], "*")
@@ -296,22 +266,19 @@ ad$i25
 ad$i50
 ```
 
-Con esta tabulación es posible determinar buenos y malos distractores, así como
-también el poder de discriminación de un ítem.
+Con esta tabulación es posible determinar buenos y malos distractores, así como también el poder de discriminación de un
+ítem.
 
 ## Análisis gráfico de ítems
 
-El análisis gráfico de ítems consiste en mostrar visualmente, mediante una
-gráfica de líneas, la relación entre la puntuación total de la prueba y la
-proporción de respuestas de los examinados que eligieron cada alternativa. Este
-análisis proporciona información esencial y fácilmente interpretable acerca de
-las características técnicas del ítem: dificultad, discriminación.
+El análisis gráfico de ítems consiste en mostrar visualmente, mediante una gráfica de líneas, la relación entre la
+puntuación total de la prueba y la proporción de respuestas de los examinados que eligieron cada alternativa. Este
+análisis proporciona información esencial y fácilmente interpretable acerca de las características técnicas del ítem:
+dificultad, discriminación.
 
-Para realizar este análisis primero se clasifica a los estudiantes en 4 grupos
-según su puntaje obtenido en la prueba. El grupo 1 corresponde a los estudiantes
-con menores puntuaciones, mientras que el grupo 4, a los de mayores puntajes. En
-el gráfico se representa la proporción de estudiantes de cada grupo que
-seleccionó una alternativa dada.
+Para realizar este análisis primero se clasifica a los estudiantes en 4 grupos según su puntaje obtenido en la prueba.
+El grupo 1 corresponde a los estudiantes con menores puntuaciones, mientras que el grupo 4, a los de mayores puntajes.
+En el gráfico se representa la proporción de estudiantes de cada grupo que seleccionó una alternativa dada.
 
 ```{r out.height="100%"}
 alternativas <- LETTERS[1:5]
@@ -330,16 +297,14 @@ item$i25$plot
 item$i50$plot
 ```
 
-Un ítem de buena calidad debería mostrar una proporción creciente de estudiantes
-de cada grupo que elije la alternativa correcta y una proporción decreciente en
-el caso de los distractores.
+Un ítem de buena calidad debería mostrar una proporción creciente de estudiantes de cada grupo que elije la alternativa
+correcta y una proporción decreciente en el caso de los distractores.
 
 ## Referencias
 
--   Morales, P. (2009). Análisis de ítem en las pruebas objetivas. Madrid.
-    Recuperado de [análisis de
+-   Morales, P. (2009). Análisis de ítem en las pruebas objetivas. Madrid. Recuperado de [análisis de
     ítems](https://educrea.cl/wp-content/uploads/2014/11/19-nov-analisis-de-items-en-las-pruebas-objetivas.pdf)
 
--   Guadalupe de los Santos (2010). Manual para el análisis gráfico de ítems.
-    Universidad Autónoma de Baja California. Recuperado de
+-   Guadalupe de los Santos (2010). Manual para el análisis gráfico de ítems. Universidad Autónoma de Baja California.
+    Recuperado de
     [manual_pagi.pdf](http://www.educacionbc.edu.mx/departamentos/evaluacion/eacademicos/archivos/jornadasBC/MANUAL_PAGI.pdf)
