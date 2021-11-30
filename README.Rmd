@@ -1,0 +1,56 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# itan
+
+<!-- badges: start -->
+
+<!-- badges: end -->
+
+El paquete itan tiene como finalidad ayudar a profesores a corregir, calificar y analizar pruebas objetivas. Para ello, este paquete incluye funciones que permiten calcular el puntaje y calificación obtenido por estudiantes; así como también, funciones para analizar los ítems del test. Entre estas últimas destaca el análisis gráfico de ítems que permite visualizar las características técnicas del ítem y determinar rápidamente su calidad.
+
+## Instalación
+
+Para instalar la versión de desarrollo del paquete itan desde [GitHub](https://github.com/) con el siguiente comando:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("arielarmijo/itan")
+```
+
+## Ejemplo
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r example}
+library(itan)
+## basic example code
+```
+
+What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+
+```{r cars}
+summary(cars)
+```
+
+You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/v1/examples>.
+
+You can also embed plots, for example:
+
+```{r pressure, echo = FALSE}
+plot(pressure)
+```
+
+In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
