@@ -21,6 +21,10 @@ knitr::opts_chunk$set(
 
 <!-- badges: end -->
 
+```{r, setup}
+library(itan)
+```
+
 El paquete itan tiene como finalidad ayudar a profesores a corregir, calificar y analizar pruebas objetivas. Para ello, este paquete incluye funciones que permiten calcular el puntaje y calificación obtenido por estudiantes; así como también, funciones para analizar los ítems del test. Entre estas últimas destaca el análisis gráfico de ítems que permite visualizar las características técnicas del ítem y determinar rápidamente su calidad.
 
 ## Instalación
@@ -36,14 +40,15 @@ devtools::install_github("arielarmijo/itan")
 
 El paquete itan incluye dos datos binarios de ejemplo llamados datos y clave. Datos contiene las respuestas de 39 estudiantes a una prueba de 50 ítems y clave contiene las respuestas correctas a cada ítem.
 
-```{r example}
+```{r}
+data(datos, clave)
 str(datos, list.len=6)
 str(clave, list.len=5)
 ```
 
 Para calcular el puntaje alcanzado en la prueba y su respectiva calificación puede usarse el siguiente script:
 
-```{r cars}
+```{r}
 respuestas <- datos[,-1]
 respuestasCorregidas <- corregirRespuestas(respuestas, clave)
 head(respuestasCorregidas)
@@ -54,7 +59,7 @@ head(cbind(id=datos$id, puntaje, nota))
 
 Además de calcular el puntaje y calificación, es posible analizar los ítems de la prueba. Para calcular el índice de dificultad y los índices de discriminación de cada ítem se puede ejecutar las siguientes líneas de código:
 
-```{r pressure, echo = FALSE}
+```{r}
 p <- calcularIndiceDificultad(respuestasCorregidas, proporcion = 0.25)
 dc1 <- calcularIndiceDiscriminacion(respuestasCorregidas, tipo = "dc1", proporcion = 0.25)
 dc2 <- calcularIndiceDiscriminacion(respuestasCorregidas, tipo = "dc2", proporcion = 0.25)
@@ -88,4 +93,4 @@ item <- agi(respuestas, clave, alternativas)
 item$i01$plot
 ```
 
-Revisar la documentación del paquete para ver más detalles de las funciones anteriormente señaladas.
+Revisar la documentación del paquete para ver más detalles sobre las funciones anteriormente señaladas.
