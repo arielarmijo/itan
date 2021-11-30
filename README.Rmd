@@ -32,25 +32,58 @@ devtools::install_github("arielarmijo/itan")
 
 ## Ejemplo
 
-This is a basic example which shows you how to solve a common problem:
+El paquete itan incluye dos datos binarios de ejemplo llamados datos y clave. Datos contiene las respuestas de 39 estudiantes a una prueba de 50 ítems y clave contiene las respuestas correctas a cada ítem.
 
 ```{r example}
 library(itan)
-## basic example code
+head(datos)
+clave
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+Para calcular el puntaje alcanzado en la prueba y su respectiva calificación puede usarse el siguiente script:
 
 ```{r cars}
-summary(cars)
+respuestas <- datos[,-1]
+respuestasCorregidas <- corregirRespuestas(respuestas, clave)
+puntaje <- calcularPuntajes(respuestasCorregidas)
+nota <- calcularNotas(puntaje)
+head(cbind(id=datos$id, respuestasCorregidas, puntaje, nota))
 ```
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/v1/examples>.
-
-You can also embed plots, for example:
+Además de calcular el puntaje y calificación, es posible analizar los ítems de la prueba. Para calcular el índice de dificultad y los índices de discriminación de cada ítem se puede ejecutar las siguientes líneas de código:
 
 ```{r pressure, echo = FALSE}
-plot(pressure)
+p <- calcularIndiceDificultad(respuestasCorregidas, proporcion = 0.25)
+dc1 <- calcularIndiceDiscriminacion(respuestasCorregidas, tipo = "dc1", proporcion = 0.25)
+dc2 <- calcularIndiceDiscriminacion(respuestasCorregidas, tipo = "dc2", proporcion = 0.25)
+head(cbind(p, dc1, dc2))
 ```
 
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+Otra manera de analizar la discriminación de un ítem es usando el coeficiente de correlación biserial puntual:
+
+```{r}
+alternativas <- c(LETTERS[1:5], "*")
+biserial <- pBis(respuestas, clave, alternativas)
+head(biserial)
+```
+
+La frecuencia en que se eligió cada alternativa en cada ítem puede hacerse de forma numérica o gráfica:
+
+```{r}
+fa <- calcularFrecuenciaAlternativas(respuestas, alternativas, clave, frecuencia = FALSE)
+head(fa)
+```
+
+```{r}
+gfa <- graficarFrecuenciaAlternativas(respuestas, alternativas, clave)
+gfa$i01
+```
+
+El paquete itan también implementa el análisis gráfico de ítems que permite resumir las características técnicas del ítem de manera gráfica, lo que facilita su análisis:
+
+```{r}
+item <- agi(respuestas, clave, alternativas)
+item$i01$plot
+```
+
+Revisar la documentación del paquete para ver más detalles de las funciones anteriormente señaladas.
