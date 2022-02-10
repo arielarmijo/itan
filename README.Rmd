@@ -29,7 +29,7 @@ El paquete itan tiene como finalidad ayudar a profesores a corregir, calificar y
 
 ## Instalación
 
-Para instalar la versión de desarrollo del paquete itan desde [GitHub](https://github.com/) con el siguiente comando:
+Para instalar la versión de desarrollo del paquete itan desde [GitHub](https://github.com/) use el siguiente comando:
 
 ``` r
 # install.packages("devtools")

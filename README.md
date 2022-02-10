@@ -20,7 +20,7 @@ rápidamente su calidad.
 ## Instalación
 
 Para instalar la versión de desarrollo del paquete itan desde
-[GitHub](https://github.com/) con el siguiente comando:
+[GitHub](https://github.com/) use el siguiente comando:
 
 ``` r
 # install.packages("devtools")
@@ -136,13 +136,13 @@ hacerse de forma numérica o gráfica:
 ``` r
 fa <- calcularFrecuenciaAlternativas(respuestas, alternativas, clave, frecuencia = FALSE)
 head(fa)
-#>   item  A  B  C  D  E * KEY
-#> 1  i01  6  4  4  2 21 2   E
-#> 2  i02  0  1  4 33  0 1   D
-#> 3  i03  6  4 26  1  0 2   C
-#> 4  i04 13 22  0  2  1 1   B
-#> 5  i05 17  8  6  0  7 1   A
-#> 6  i06  2  6 25  3  1 2   C
+#>   item  A  B  C  D  E * NA KEY
+#> 1  i01  6  4  4  2 21 2  0   E
+#> 2  i02  0  1  4 33  0 1  0   D
+#> 3  i03  6  4 26  1  0 2  0   C
+#> 4  i04 13 22  0  2  1 1  0   B
+#> 5  i05 17  8  6  0  7 1  0   A
+#> 6  i06  2  6 25  3  1 2  0   C
 ```
 
 ``` r
