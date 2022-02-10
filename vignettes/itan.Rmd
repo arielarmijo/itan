@@ -40,22 +40,24 @@ Los siguientes comandos cargan estos archivos en el entorno global.
 
 ```{r}
 datos.csv <- system.file("extdata", "datos.csv", package = "itan", mustWork = TRUE)
-datos <- read.csv(datos.csv)
+datos <- read.csv(datos.csv, na = c("*"))
 
 clave.csv <- system.file("extdata", "clave.csv", package = "itan", mustWork = TRUE)
 clave <- read.csv(clave.csv)
 ```
 
-Como se puede apreciar, datos corresponde a un data frame con 39 observaciones y 51 variables. La primera variable
+Como se puede apreciar, `datos` corresponde a un data frame con 39 observaciones y 51 variables. La primera variable
 correponde al identificador de cada estudiante. El resto de las columnas corresponde a los ítems de la prueba. Las
-alternativas posibles a cada ítem son A, B, C, D y E. Las preguntas omitidas se indican mediante un '\*'.
+alternativas posibles a cada ítem son A, B, C, D y E. Las preguntas omitidas se indican mediante un "\*". Nótese que al
+momento de importar los datos se usa el parámetro `na = c("*")` para transformar estas respuestas a valores `NA`. Esto
+es importante para evitar errores y distorsiones en las funciones que analizan los ítems.
 
 ```{r}
 head(datos)
 ```
 
 Por otra parte, clave también es un data frame, pero contiene una sola observación y 50 variables. Corresponde a las
-respuestas correctas de la prueba.
+respuestas correctas a cada pregunta de la prueba.
 
 ```{r}
 clave
@@ -86,6 +88,7 @@ nota <- calcularNotas(puntaje)
 resultados <- cbind(id=datos$id, puntaje, nota)
 resultados <- resultados[order(resultados[,3], decreasing = TRUE),]
 head(resultados)
+summary(nota)
 ```
 
 ## Análisis de ítems
@@ -105,7 +108,6 @@ peor desempeño. Esto se indica como argumento del parámetro proporcion en la f
 ```{r}
 p <- calcularIndiceDificultad(respuestasCorregidas, proporcion = 0.25)
 p
-summary(p, digits = 2)
 ```
 
 En el ejemplo anterior se calcula el índice de dificultad considerando el 25% de los estudiantes con menores puntajes y
@@ -231,10 +233,12 @@ Para conocer la frecuencia en que cada alternativa fue seleccionada por los estu
 calcularFrecuenciaDistractores como se muestra en el siguiente ejemplo:
 
 ```{r}
-alternativas <- c(LETTERS[1:5], "*")
+alternativas <- LETTERS[1:5]
 fa <- calcularFrecuenciaAlternativas(respuestas, alternativas, clave, frecuencia = FALSE)
 head(fa)
 ```
+
+Las columna `NA` de la tabla anterior representa las respuestas omitidas.
 
 ### Gráfico frecuencia alternativas
 
@@ -259,7 +263,6 @@ cada caso. Otros valores razonables son 27% y 33%. Por último, se tabulan las r
 superior e inferior.
 
 ```{r}
-alternativas <- c(LETTERS[1:5], "*")
 ad <- analizarAlternativas(respuestas, clave, alternativas, proporcion = 0.25)
 ad$i01
 ad$i25
@@ -281,8 +284,6 @@ El grupo 1 corresponde a los estudiantes con menores puntuaciones, mientras que 
 En el gráfico se representa la proporción de estudiantes de cada grupo que seleccionó una alternativa dada.
 
 ```{r out.height="100%"}
-alternativas <- LETTERS[1:5]
-
 item <- agi(respuestas, clave, alternativas)
 
 item$i01$datos

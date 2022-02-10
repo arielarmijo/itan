@@ -51,9 +51,10 @@ test_that("dicotomize", {
   x <- datos$i01
   x[x=="A"] <- 1
   x[x!="1"] <- 0
+  x[is.na(x)] <- 0
 
-  expected <- as.integer(x)
   actual <- dicotomize(datos$i01, "A")
+  expected <- as.integer(x)
 
   expect_equal(actual, expected)
 

@@ -1,6 +1,8 @@
 #' Datos de los estudiantes
 #'
-#' Un data frame con el id  y las respuestas de los estudiantes.
+#' Un data frame con el id  y las respuestas de los estudiantes. Las respuestas
+#' posibles pueden ser A, B, C, D o E. Las respuestas omitidas se representan
+#' mediante valores NA.
 #'
 #' @format Data frame con 39 observaciones y 51 variables:
 #' \describe{

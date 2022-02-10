@@ -1,3 +1,3 @@
-datos <- read.csv("inst/extdata/datos.csv")
 clave <- read.csv("inst/extdata/clave.csv")
-usethis::use_data(datos, clave, overwrite = TRUE)
+datos <- read.csv("inst/extdata/datos.csv", na.strings = c("*"))
+usethis::use_data(clave, datos, overwrite = TRUE)
