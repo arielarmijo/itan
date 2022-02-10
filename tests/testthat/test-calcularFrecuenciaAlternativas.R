@@ -9,7 +9,7 @@ test_that("calcularFrecuenciaAlternativas", {
                          c(2, 1, 2, 1, 1, 2, 1, 1, 1, 2))
   rownames(expected) <- as.character(1:10)
 
-# Data from csv files
+  # Data from csv files
   clave.csv <- system.file("extdata", "clave.csv", package = "itan", mustWork = TRUE)
   datos.csv <- system.file("extdata", "datos.csv", package = "itan", mustWork = TRUE)
   clave <- read.csv(clave.csv)
@@ -17,15 +17,15 @@ test_that("calcularFrecuenciaAlternativas", {
   # Sin NA
   datos <- read.csv(datos.csv)
   resultados <- datos[,-1]
-  alternativas <- c("A", "B", "C", "D", "E", "*")
+  alternativas <- c("A", "B", "C", "D", "E")
   actual <- calcularFrecuenciaAlternativas(resultados, alternativas, clave = NULL, frecuencia = F)[1:10,]
-  colnames(expected) <- c("item", c(LETTERS[1:5], "*"))
+  colnames(expected) <- c("item", c(LETTERS[1:5], "NA"))
   expect_mapequal(actual, expected)
 
   # Con NA
-  datos <- read.csv(datos.csv, na.strings = "*")
+  datos <- read.csv(datos.csv, na.strings = "NA")
   resultados <- datos[,-1]
-  alternativas <- c("A", "B", "C", "D", "E", NA)
+  alternativas <- c("A", "B", "C", "D", "E")
   actual <- calcularFrecuenciaAlternativas(resultados, alternativas, clave = NULL, frecuencia = F)[1:10,]
   colnames(expected) <- c("item", c(LETTERS[1:5], "NA"))
   expect_mapequal(actual, expected)
@@ -40,15 +40,15 @@ test_that("calcularFrecuenciaAlternativas", {
   # Sin NA
   datos <- read_excel(datos.xlsx)
   resultados <- datos[,-1]
-  alternativas <- c("A", "B", "C", "D", "E", "*")
+  alternativas <- c("A", "B", "C", "D", "E")
   actual <- calcularFrecuenciaAlternativas(resultados, alternativas, clave = NULL, frecuencia = F)[1:10,]
-  colnames(expected) <- c("item", c(LETTERS[1:5], "*"))
+  colnames(expected) <- c("item", c(LETTERS[1:5], "NA"))
   expect_mapequal(actual, expected)
 
   # Con NA
-  datos <- read_excel(datos.xlsx, na = "*")
+  datos <- read_excel(datos.xlsx, na = "NA")
   resultados <- datos[,-1]
-  alternativas <- c("A", "B", "C", "D", "E", NA)
+  alternativas <- c("A", "B", "C", "D", "E")
   actual <- calcularFrecuenciaAlternativas(resultados, alternativas, clave = NULL, frecuencia = F)[1:10,]
   colnames(expected) <- c("item", c(LETTERS[1:5], "NA"))
   expect_mapequal(actual, expected)
