@@ -98,11 +98,11 @@ corregirRespuestas <- function(respuestas, clave){
                    dimnames = list(rownames(respuestas), colnames(respuestas)))
 
   clave <- toupper(clave)
-  output[is.na(output)] <- 0
+  #output[is.na(output)] <- 0
   for (i in 1:nrow(respuestas)){
     output[i,] <- ifelse(toupper(respuestas[i,]) == clave, 1, 0)
   }
-
+  output[is.na(output)] <- 0
   return(as.data.frame(output))
 
 }
