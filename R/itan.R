@@ -625,7 +625,7 @@ agi <- function(respuestas, clave, alternativas, nGrupos=4, digitos=2) {
       ggplot2::theme(plot.title = element_text(size=18, face="bold" ,hjust=0.5),
                      legend.position = "top",
                      legend.text = element_text(size=11, face="bold", hjust=0.5)) +
-      ggplot2::scale_x_continuous(limits = c(min(limites),max(limites)), breaks=round(limites,1)) +
+      ggplot2::scale_x_continuous(limits = c(min(limites),max(limites)), breaks=round(limites, 0)) +
       ggplot2::scale_y_continuous(limits = c(0,1))
 
   }
